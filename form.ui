@@ -271,8 +271,8 @@
      <widget class="QSlider" name="sliderCameraBrightness">
       <property name="geometry">
        <rect>
-        <x>66</x>
-        <y>59</y>
+        <x>70</x>
+        <y>60</y>
         <width>201</width>
         <height>19</height>
        </rect>
@@ -612,7 +612,7 @@
       <rect>
        <x>10</x>
        <y>190</y>
-       <width>312</width>
+       <width>387</width>
        <height>205</height>
       </rect>
      </property>
@@ -620,161 +620,170 @@
       <string>MetaData</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_6">
-      <item row="0" column="0" colspan="2">
-       <widget class="QLabel" name="label_11">
+      <item row="1" column="2" colspan="2">
+       <widget class="QPushButton" name="buttonStartExperiment">
         <property name="text">
-         <string>Experiment Name:</string>
+         <string>Start Experiment</string>
         </property>
-       </widget>
-      </item>
-      <item row="1" column="0" colspan="6">
-       <widget class="QLineEdit" name="lineeditExperimentName">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="6">
-       <widget class="QCheckBox" name="checkBoxExperimentAutonaming">
-        <property name="text">
-         <string>Auto</string>
-        </property>
-        <property name="checked">
+        <property name="checkable">
          <bool>true</bool>
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_15">
-        <property name="text">
-         <string>Duration</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QSpinBox" name="spinBoxExperimentDurationMinutes">
-        <property name="value">
-         <number>5</number>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="2" colspan="2">
-       <widget class="QLabel" name="label_14">
-        <property name="text">
-         <string>minutes</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="4">
-       <widget class="QSpinBox" name="spinBoxExperimentDurationSeconds"/>
-      </item>
-      <item row="2" column="5" colspan="2">
-       <widget class="QLabel" name="label_16">
-        <property name="text">
-         <string>seconds</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_10">
-        <property name="text">
-         <string>Crowdsize</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QSpinBox" name="spinboxCrowdsize">
-        <property name="value">
-         <number>1</number>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="2" colspan="2">
-       <widget class="QLabel" name="label_12">
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Hours Post Hatching&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="text">
-         <string>HPH</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="4">
-       <widget class="QSpinBox" name="spinBox"/>
-      </item>
-      <item row="3" column="5" colspan="2">
-       <widget class="QCheckBox" name="checkboxMetaDataDechorionation">
-        <property name="layoutDirection">
-         <enum>Qt::RightToLeft</enum>
-        </property>
-        <property name="text">
-         <string>Dechorionated</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QCheckBox" name="checkboxMetaDataGenetics">
-        <property name="layoutDirection">
-         <enum>Qt::RightToLeft</enum>
-        </property>
-        <property name="text">
-         <string>Genetics</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="1" colspan="2">
-       <widget class="QLabel" name="labelMetaDataGenetics">
-        <property name="text">
-         <string>Genotype:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="3" colspan="4">
-       <widget class="QLineEdit" name="lineeditMetaDataGenetics">
-        <property name="text">
-         <string>None</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0">
-       <widget class="QCheckBox" name="checkboxMetaDataDrugs">
-        <property name="layoutDirection">
-         <enum>Qt::RightToLeft</enum>
-        </property>
-        <property name="text">
-         <string>Drugs</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="1" colspan="2">
-       <widget class="QLabel" name="labelMetaDataDrugName">
-        <property name="text">
-         <string>Drug name:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="3" colspan="4">
-       <widget class="QLineEdit" name="lineeditMetaDataDrugName">
-        <property name="layoutDirection">
-         <enum>Qt::LeftToRight</enum>
-        </property>
-        <property name="text">
-         <string>None</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="0" colspan="4">
+      <item row="1" column="0" colspan="2">
        <widget class="QPushButton" name="buttonSetWorkingDirectory">
         <property name="text">
          <string>Set Working Directory</string>
         </property>
        </widget>
       </item>
-      <item row="6" column="4" colspan="3">
-       <widget class="QPushButton" name="buttonStartExperiment">
-        <property name="text">
-         <string>Start Experiment</string>
-        </property>
+      <item row="0" column="0" colspan="4">
+       <widget class="QWidget" name="widgetMetaData" native="true">
+        <layout class="QGridLayout" name="gridLayout_7">
+         <item row="3" column="1">
+          <widget class="QSpinBox" name="spinboxCrowdsize">
+           <property name="value">
+            <number>1</number>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="label_10">
+           <property name="text">
+            <string>Crowdsize</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_15">
+           <property name="text">
+            <string>Duration</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QSpinBox" name="spinBoxExperimentDurationMinutes">
+           <property name="value">
+            <number>5</number>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="2" colspan="2">
+          <widget class="QLabel" name="label_14">
+           <property name="text">
+            <string>minutes</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="4">
+          <widget class="QSpinBox" name="spinBoxExperimentDurationSeconds"/>
+         </item>
+         <item row="2" column="5" colspan="2">
+          <widget class="QLabel" name="label_16">
+           <property name="text">
+            <string>seconds</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="6">
+          <widget class="QCheckBox" name="checkBoxExperimentAutonaming">
+           <property name="text">
+            <string>Auto</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1" colspan="2">
+          <widget class="QLabel" name="labelMetaDataDrugName">
+           <property name="text">
+            <string>Drug name:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="2" colspan="2">
+          <widget class="QLabel" name="label_12">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Hours Post Hatching&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>HPH</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="4">
+          <widget class="QSpinBox" name="spinBox"/>
+         </item>
+         <item row="3" column="5" colspan="2">
+          <widget class="QCheckBox" name="checkboxMetaDataDechorionation">
+           <property name="layoutDirection">
+            <enum>Qt::RightToLeft</enum>
+           </property>
+           <property name="text">
+            <string>Dechorionated</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0">
+          <widget class="QCheckBox" name="checkboxMetaDataGenetics">
+           <property name="layoutDirection">
+            <enum>Qt::RightToLeft</enum>
+           </property>
+           <property name="text">
+            <string>Genetics</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1" colspan="2">
+          <widget class="QLabel" name="labelMetaDataGenetics">
+           <property name="text">
+            <string>Genotype:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="3" colspan="4">
+          <widget class="QLineEdit" name="lineeditMetaDataGenetics">
+           <property name="text">
+            <string>None</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="0">
+          <widget class="QCheckBox" name="checkboxMetaDataDrugs">
+           <property name="layoutDirection">
+            <enum>Qt::RightToLeft</enum>
+           </property>
+           <property name="text">
+            <string>Drugs</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="3" colspan="4">
+          <widget class="QLineEdit" name="lineeditMetaDataDrugName">
+           <property name="layoutDirection">
+            <enum>Qt::LeftToRight</enum>
+           </property>
+           <property name="text">
+            <string>None</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0" colspan="6">
+          <widget class="QLineEdit" name="lineeditExperimentName">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0" colspan="2">
+          <widget class="QLabel" name="label_11">
+           <property name="text">
+            <string>Experiment Name:</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </item>
      </layout>
@@ -1198,5 +1207,86 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>sliderBlue</sender>
+   <signal>sliderMoved(int)</signal>
+   <receiver>labelBlueSliderValue</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>76</x>
+     <y>68</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>73</x>
+     <y>45</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sliderGreen</sender>
+   <signal>sliderMoved(int)</signal>
+   <receiver>labelGreenSliderValue</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>53</x>
+     <y>151</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>52</x>
+     <y>57</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sliderRed</sender>
+   <signal>sliderMoved(int)</signal>
+   <receiver>labelRedSliderValue</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>26</x>
+     <y>112</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>26</x>
+     <y>57</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sliderCameraBrightness</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>labelCameraBrighness</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>197</x>
+     <y>193</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>285</x>
+     <y>189</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sliderIRLight</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>label_22</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>218</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>291</x>
+     <y>250</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
