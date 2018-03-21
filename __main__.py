@@ -17,9 +17,9 @@ from pyqtgraph import PlotDataItem, LinearRegionItem, mkPen
 # from functools import partial
 import numpy as np
 from threading import Thread
-from stimSender import Stimuli
-from Arduino import Arduino
-from Camera import Camera
+from stimulimanager import StimuliManager
+from arduino import Arduino
+from camera import Camera
 import sys, time, os
 import pandas as pd
 import cv2
@@ -27,12 +27,12 @@ import cv2
 
 # from PandasModel import PandasModel
 
-class STD(QtWidgets.QWidget):
+class imMobilize(QtWidgets.QWidget):
 
     def __init__(self, parent=None, *args):
 
         # run the widget, get the form
-        QtGui.QWidget.__init__(self, parent, *args)
+        QtWidgets.QWidget.__init__(self, parent, *args)
 
         self.ui = Ui_Form()
         self.ui.setupUi(self)
@@ -91,7 +91,7 @@ class STD(QtWidgets.QWidget):
         =====================================================================
         """
 
-        self.Stims = Stimuli(arduino=self.arduino)
+        self.Stims = StimuliManager(arduino=self.arduino)
         self.set_experiment_view()
         self.set_stim_name_lineedit()
         self.ui.buttonDeleteSelectedStim.clicked.connect(self.delete_selected_stim)
@@ -265,8 +265,7 @@ class STD(QtWidgets.QWidget):
         self.ui.graphicsView.clear()
         plot = PlotDataItem(pen="k")
 
-        duration = (
-                               self.ui.spinBoxExperimentDurationMinutes.value() * 60) + self.ui.spinBoxExperimentDurationSeconds.value()
+        duration = (self.ui.spinBoxExperimentDurationMinutes.value() * 60) + self.ui.spinBoxExperimentDurationSeconds.value()
         xs = np.linspace(0, duration, 2)
         ys = [1, 1]
         plot.setData(xs, ys)
@@ -286,6 +285,10 @@ class STD(QtWidgets.QWidget):
                 b = int(on[6:])
                 box = LinearRegionItem(values=(start, stop), brush=(r, g, b, 50), movable=False)
                 self.ui.graphicsView.addItem(box)
+
+        self.ui.comboBoxSelectStimId.clear()
+        for stim_id in set(self.Stims.df.id):
+            self.ui.comboBoxSelectStimId.addItem(stim_id)
 
     # def checkStimSafeguard(self):
     #     if self.ui.checkboxDirectStim.isChecked() is False:
@@ -411,18 +414,19 @@ class STD(QtWidgets.QWidget):
         self.Stims.delete_stimulus(stim_id)
         self.set_experiment_view()
 
-        self.ui.comboBoxSelectStimId.clear()
-        for stim_id in set(self.Stims.df.id):
-            self.ui.comboBoxSelectStimId.addItem(stim_id)
+
 
     def load_stimuli(self):
         file = QtWidgets.QFileDialog.getOpenFileName(self, "Select a Stimuli File")
         file = file[0]
-        df = pd.read_csv(file, delimiter = "\t")
-        
-        self.Stims.df = df
-        self.set_experiment_view()
-
+        print(file)
+        if os.path.exists(file) and file.endswith(".csv"):
+            df = pd.read_csv(file, delimiter = "\t")
+            self.Stims.df = df
+            self.set_experiment_view()
+        else:
+            QtWidgets.QMessageBox.warning(self, "Invalid Filename", "Invalid Stimulus File selected.")
+    
     def save_stimuli(self):
         filename = QtWidgets.QFileDialog.getSaveFileName(self, "Save Stimuli file as")
         if not filename.endswith(".csv"):
@@ -442,6 +446,7 @@ class STD(QtWidgets.QWidget):
     def set_autonaming(self, bool):
         if bool:
             self.ui.lineeditVideoName.setText(time.strftime("%Y%m%d_%H%M%S_video"))
+
     def set_experiment_autonaming(self):
         if self.ui.checkBoxExperimentAutonaming.isChecked():
             name = time.strftime("%Y%m%d_%H%M%S")
@@ -660,8 +665,8 @@ if __name__ == "__main__":
     projectWindow = QtGui.QMainWindow()
     projectWindow.resize(800, 600)
     projectWindow.setWindowTitle('Stimuli & Trigger Delivery')
-    std = STD()
-    projectWindow.setCentralWidget(std)
+    immobilize = imMobilize()
+    projectWindow.setCentralWidget(immobilize)
     projectWindow.show()
 
     if (sys.flags.interactive != 1) or not hasattr(QtCore, 'PYQT_VERSION'):
