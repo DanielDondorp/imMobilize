@@ -29,7 +29,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="tabConnections">
     <attribute name="title">
@@ -61,7 +61,7 @@
       <item row="0" column="1">
        <widget class="QLabel" name="labelSerialLiveIncoming">
         <property name="text">
-         <string>TextLabel</string>
+         <string>[No Data Yet]</string>
         </property>
        </widget>
       </item>
@@ -75,7 +75,7 @@
       <item row="1" column="1">
        <widget class="QLabel" name="labelSerialLiveTemperature">
         <property name="text">
-         <string>TextLabel</string>
+         <string>[No Data Yet]</string>
         </property>
        </widget>
       </item>
@@ -1285,6 +1285,102 @@
     <hint type="destinationlabel">
      <x>291</x>
      <y>250</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkboxMetaDataGenetics</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>labelMetaDataGenetics</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>84</x>
+     <y>343</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>130</x>
+     <y>341</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkboxMetaDataGenetics</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>lineeditMetaDataGenetics</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>67</x>
+     <y>339</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>245</x>
+     <y>336</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkboxMetaDataDrugs</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>labelMetaDataDrugName</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>78</x>
+     <y>357</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>131</x>
+     <y>363</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkboxMetaDataDrugs</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>lineeditMetaDataDrugName</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>74</x>
+     <y>363</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>246</x>
+     <y>361</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBoxExperimentAutonaming</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>lineeditExperimentName</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>339</x>
+     <y>268</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>297</x>
+     <y>268</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkboxAutoNaming</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>lineeditVideoName</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>238</x>
+     <y>344</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>185</x>
+     <y>344</y>
     </hint>
    </hints>
   </connection>
