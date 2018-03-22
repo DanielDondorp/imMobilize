@@ -96,7 +96,7 @@ class imMobilize(QtWidgets.QWidget):
         self.set_experiment_view()
         self.set_stim_name_lineedit()
         self.ui.buttonDeleteSelectedStim.clicked.connect(self.delete_selected_stim)
-
+        self.ui.buttonDeleteAllStims.clicked.connect(self.delete_all_stims)
         self.ui.buttonLoadStimulusProfile.clicked.connect(self.load_stimuli)
         self.ui.buttonSaveStimulusProfile.clicked.connect(self.save_stimuli)
 
@@ -403,23 +403,33 @@ class imMobilize(QtWidgets.QWidget):
         self.set_experiment_view()
 
 
+    def delete_all_stims(self):
+        self.Stims.delete_all_stims()
+        self.set_experiment_view()
 
     def load_stimuli(self):
         file = QtWidgets.QFileDialog.getOpenFileName(self, "Select a Stimuli File")
         file = file[0]
-        print(file)
         if os.path.exists(file) and file.endswith(".csv"):
             df = pd.read_csv(file, delimiter = "\t")
             self.Stims.df = df
             self.set_experiment_view()
+        elif not file:
+            pass
         else:
             QtWidgets.QMessageBox.warning(self, "Invalid Filename", "Invalid Stimulus File selected.")
     
     def save_stimuli(self):
-        filename = QtWidgets.QFileDialog.getSaveFileName(self, "Save Stimuli file as")
-        if not filename.endswith(".csv"):
-            filename+=".csv"
-        self.Stims.df.to_csv(filename[0], sep="\t")
+        filename_selected = False
+        while not filename_selected:
+            filename = QtWidgets.QFileDialog.getSaveFileName(self, "Save Stimuli file as")[0]
+            if not filename:
+                break
+            else:
+                if not filename.endswith(".csv"):
+                    filename += ".csv"
+                self.Stims.df.to_csv(filename, sep = "\t")
+                filename_selected = True
 
     def toggle_preview(self, event):
         if event:
@@ -500,9 +510,17 @@ class imMobilize(QtWidgets.QWidget):
         print(self.path)
 
     def set_working_directory(self):
-        self.path = QtGui.QFileDialog.getExistingDirectory()
-        os.chdir(self.path)
-        self.working_directory_selected = True
+        self.working_directory_selected = False
+        while not self.working_directory_selected:
+            self.path = QtGui.QFileDialog.getExistingDirectory()
+            if os.path.exists(self.path):
+                os.chdir(self.path)
+                self.working_directory_selected = True
+            else:
+                q = QtWidgets.QMessageBox.question(self, "No path selected", "Do you wish to not select a path? \n Path then defaults to D:\\")
+                if q == QtWidgets.QMessageBox.Yes:
+                    self.path = "D:\\"
+                    self.working_directory_selected = True
 
     def reset_camera_properties(self):
         self.cam.brightness = 0
@@ -521,16 +539,15 @@ class imMobilize(QtWidgets.QWidget):
         self.ui.spinBoxFramerate.setValue(30)
 
     def record_video(self, event):
-
         if event:
+            self.ui.buttonRecordVideo.setText("Stop")
+            self.ui.buttonRecordVideo.setStyleSheet("color:red")
 
-            self.ui.cameraGroup.setEnabled(False)
+            self.ui.groupBoxCameraControls.setEnabled(False)
+            self.ui.groupBoxCameraConnection.setEnabled(False)
 
             if self.ui.checkboxAutoNaming.isChecked():
                 self.ui.lineeditVideoName.setText(time.strftime("%Y%m%d_%H%M" + "_experiment"))
-
-            self.ui.buttonRecordVideo.setText("Stop")
-            self.ui.buttonRecordVideo.setStyleSheet("color:Red")
 
             name = os.path.join(self.path, self.ui.lineeditVideoName.text())
 
@@ -542,14 +559,13 @@ class imMobilize(QtWidgets.QWidget):
             t.start()
 
         else:
-            self.ui.cameraGroup.setEnabled(True)
-
+            self.ui.groupBoxCameraControls.setEnabled(True)
+            self.ui.groupBoxCameraConnection.setEnabled(True)
             self.ui.buttonRecordVideo.setText("Record")
             self.ui.buttonRecordVideo.setStyleSheet("color:Black")
             self.cam.stop()
 
     def wait_for_recording_end(self):
-
         while self.cam.alive == True:
             time.sleep(0.1)
         else:
@@ -566,9 +582,14 @@ class imMobilize(QtWidgets.QWidget):
     def start_experiment(self, event):
         if event:
             if not hasattr(self, "cam"):
-                QtWidgets.QMessageBox.warning(self, "Not Connected Warning", "No open connection with Camera or Controller")
-            elif self.cam.cap.isOpened() != True or self.arduino.ser.isOpen() != True:
-                QtWidgets.QMessageBox.warning(self, "Not Connected Warning", "No open connection with Camera or Controller")
+                QtWidgets.QMessageBox.warning(self, "Not Connected Warning", "No open connection with Camera")
+                self.ui.buttonStartExperiment.setChecked(False)
+            elif not self.cam.cap.isOpened():
+                QtWidgets.QMessageBox.warning(self, "Not Connected Warning", "No open connection with Camera")
+                self.ui.buttonStartExperiment.setChecked(False)
+            elif not self.arduino.connected:
+                QtWidgets.QMessageBox.warning(self, "Not Connected Warning", "No open connection with Controller")
+                self.ui.buttonStartExperiment.setChecked(False)
             else:
                 if not self.working_directory_selected:
                     QtWidgets.QMessageBox.warning(self, "No valid working directory", "Select a directory to save your experiment")
@@ -614,7 +635,7 @@ class imMobilize(QtWidgets.QWidget):
             df["exposture"] = [float(self.ui.comboboxCameraExposure.currentText())]
             df["gamma"] = [self.cam.brightness]
             df["brightness"] = [self.cam.brightness]
-            df["infrared"] = [self.ui.sliderIRLight.value]
+            df["infrared"] = [self.ui.sliderIRLight.value()]
 
 
             df.to_csv(os.path.join(self.experiment_path, "metadata.csv"), sep="\t")
@@ -623,8 +644,6 @@ class imMobilize(QtWidgets.QWidget):
             df = pd.DataFrame(np.hstack([self.logged_temperature_time.reshape(-1,1), self.logged_temperature.reshape(-1,1), self.logged_temperature_2.reshape(-1,1)]), columns = ["time", "temperature", "temperature2"])
             df.set_index("time", inplace=True)
             df.to_csv(os.path.join(self.experiment_path, "logged_temperatures.csv"), sep="\t")
-
-
             self.ui.widgetMetaData.setEnabled(True)
 
 
