@@ -17,9 +17,9 @@ from pyqtgraph import PlotDataItem, LinearRegionItem, mkPen
 # from functools import partial
 import numpy as np
 from threading import Thread
-from stimSender import Stimuli
-from Arduino import Arduino
-from Camera import Camera
+from stimulimanager import StimuliManager
+from arduino import Arduino
+from camera import Camera
 import sys, time, os
 import pandas as pd
 import cv2
@@ -27,16 +27,17 @@ import cv2
 
 # from PandasModel import PandasModel
 
-class STD(QtWidgets.QWidget):
+class imMobilize(QtWidgets.QWidget):
 
     def __init__(self, parent=None, *args):
 
         # run the widget, get the form
-        QtGui.QWidget.__init__(self, parent, *args)
+        QtWidgets.QWidget.__init__(self, parent, *args)
 
         self.ui = Ui_Form()
         self.ui.setupUi(self)
 
+        self.working_directory_selected = False
         """
         ==============================================================
         Connecting the buttons and labels in the serial control group
@@ -91,11 +92,11 @@ class STD(QtWidgets.QWidget):
         =====================================================================
         """
 
-        self.Stims = Stimuli(arduino=self.arduino)
+        self.Stims = StimuliManager(arduino=self.arduino)
         self.set_experiment_view()
         self.set_stim_name_lineedit()
         self.ui.buttonDeleteSelectedStim.clicked.connect(self.delete_selected_stim)
-
+        self.ui.buttonDeleteAllStims.clicked.connect(self.delete_all_stims)
         self.ui.buttonLoadStimulusProfile.clicked.connect(self.load_stimuli)
         self.ui.buttonSaveStimulusProfile.clicked.connect(self.save_stimuli)
 
@@ -165,19 +166,6 @@ class STD(QtWidgets.QWidget):
         self.ui.checkboxAutoNaming.toggled.connect(self.set_autonaming)
         self.ui.buttonRecordVideo.clicked.connect(self.record_video)
 
-    # def detect_cameras(self):
-    #     n_cameras = 0
-    #     while True:
-    #         cap = cv2.VideoCapture(n_cameras)
-    #         if not cap.isOpened():
-    #             break
-    #         else:
-    #             n_cameras += 1
-    #             cap.release()
-    #     self.ui.comboBoxConnectedCameras.clear()
-    #     for i in range(n_cameras):
-    #         cam = "Camera " + str(i + 1)
-    #         self.ui.comboBoxConnectedCameras.addItem(cam)
 
     def detect_cameras(self):
         self.ui.comboBoxConnectedCameras.clear()
@@ -265,8 +253,7 @@ class STD(QtWidgets.QWidget):
         self.ui.graphicsView.clear()
         plot = PlotDataItem(pen="k")
 
-        duration = (
-                               self.ui.spinBoxExperimentDurationMinutes.value() * 60) + self.ui.spinBoxExperimentDurationSeconds.value()
+        duration = (self.ui.spinBoxExperimentDurationMinutes.value() * 60) + self.ui.spinBoxExperimentDurationSeconds.value()
         xs = np.linspace(0, duration, 2)
         ys = [1, 1]
         plot.setData(xs, ys)
@@ -286,6 +273,10 @@ class STD(QtWidgets.QWidget):
                 b = int(on[6:])
                 box = LinearRegionItem(values=(start, stop), brush=(r, g, b, 50), movable=False)
                 self.ui.graphicsView.addItem(box)
+
+        self.ui.comboBoxSelectStimId.clear()
+        for stim_id in set(self.Stims.df.id):
+            self.ui.comboBoxSelectStimId.addItem(stim_id)
 
     # def checkStimSafeguard(self):
     #     if self.ui.checkboxDirectStim.isChecked() is False:
@@ -411,23 +402,34 @@ class STD(QtWidgets.QWidget):
         self.Stims.delete_stimulus(stim_id)
         self.set_experiment_view()
 
-        self.ui.comboBoxSelectStimId.clear()
-        for stim_id in set(self.Stims.df.id):
-            self.ui.comboBoxSelectStimId.addItem(stim_id)
+
+    def delete_all_stims(self):
+        self.Stims.delete_all_stims()
+        self.set_experiment_view()
 
     def load_stimuli(self):
         file = QtWidgets.QFileDialog.getOpenFileName(self, "Select a Stimuli File")
         file = file[0]
-        df = pd.read_csv(file, delimiter = "\t")
-        
-        self.Stims.df = df
-        self.set_experiment_view()
-
+        if os.path.exists(file) and file.endswith(".csv"):
+            df = pd.read_csv(file, delimiter = "\t")
+            self.Stims.df = df
+            self.set_experiment_view()
+        elif not file:
+            pass
+        else:
+            QtWidgets.QMessageBox.warning(self, "Invalid Filename", "Invalid Stimulus File selected.")
+    
     def save_stimuli(self):
-        filename = QtWidgets.QFileDialog.getSaveFileName(self, "Save Stimuli file as")
-        if not filename.endswith(".csv"):
-            filename+=".csv"
-        self.Stims.df.to_csv(filename[0], sep="\t")
+        filename_selected = False
+        while not filename_selected:
+            filename = QtWidgets.QFileDialog.getSaveFileName(self, "Save Stimuli file as")[0]
+            if not filename:
+                break
+            else:
+                if not filename.endswith(".csv"):
+                    filename += ".csv"
+                self.Stims.df.to_csv(filename, sep = "\t")
+                filename_selected = True
 
     def toggle_preview(self, event):
         if event:
@@ -442,6 +444,7 @@ class STD(QtWidgets.QWidget):
     def set_autonaming(self, bool):
         if bool:
             self.ui.lineeditVideoName.setText(time.strftime("%Y%m%d_%H%M%S_video"))
+
     def set_experiment_autonaming(self):
         if self.ui.checkBoxExperimentAutonaming.isChecked():
             name = time.strftime("%Y%m%d_%H%M%S")
@@ -507,8 +510,17 @@ class STD(QtWidgets.QWidget):
         print(self.path)
 
     def set_working_directory(self):
-        self.path = QtGui.QFileDialog.getExistingDirectory()
-        os.chdir(self.path)
+        self.working_directory_selected = False
+        while not self.working_directory_selected:
+            self.path = QtGui.QFileDialog.getExistingDirectory()
+            if os.path.exists(self.path):
+                os.chdir(self.path)
+                self.working_directory_selected = True
+            else:
+                q = QtWidgets.QMessageBox.question(self, "No path selected", "Do you wish to not select a path? \n Path then defaults to D:\\")
+                if q == QtWidgets.QMessageBox.Yes:
+                    self.path = "D:\\"
+                    self.working_directory_selected = True
 
     def reset_camera_properties(self):
         self.cam.brightness = 0
@@ -527,16 +539,15 @@ class STD(QtWidgets.QWidget):
         self.ui.spinBoxFramerate.setValue(30)
 
     def record_video(self, event):
-
         if event:
+            self.ui.buttonRecordVideo.setText("Stop")
+            self.ui.buttonRecordVideo.setStyleSheet("color:red")
 
-            self.ui.cameraGroup.setEnabled(False)
+            self.ui.groupBoxCameraControls.setEnabled(False)
+            self.ui.groupBoxCameraConnection.setEnabled(False)
 
             if self.ui.checkboxAutoNaming.isChecked():
                 self.ui.lineeditVideoName.setText(time.strftime("%Y%m%d_%H%M" + "_experiment"))
-
-            self.ui.buttonRecordVideo.setText("Stop")
-            self.ui.buttonRecordVideo.setStyleSheet("color:Red")
 
             name = os.path.join(self.path, self.ui.lineeditVideoName.text())
 
@@ -548,14 +559,13 @@ class STD(QtWidgets.QWidget):
             t.start()
 
         else:
-            self.ui.cameraGroup.setEnabled(True)
-
+            self.ui.groupBoxCameraControls.setEnabled(True)
+            self.ui.groupBoxCameraConnection.setEnabled(True)
             self.ui.buttonRecordVideo.setText("Record")
             self.ui.buttonRecordVideo.setStyleSheet("color:Black")
             self.cam.stop()
 
     def wait_for_recording_end(self):
-
         while self.cam.alive == True:
             time.sleep(0.1)
         else:
@@ -569,10 +579,45 @@ class STD(QtWidgets.QWidget):
     METHODS TO RUN AN ENTIRE EXPERIMENT
     ==========================================================================================
     """
+    def start_experiment(self, event):
+        if event:
+            if not hasattr(self, "cam"):
+                QtWidgets.QMessageBox.warning(self, "Not Connected Warning", "No open connection with Camera")
+                self.ui.buttonStartExperiment.setChecked(False)
+            elif not self.cam.cap.isOpened():
+                QtWidgets.QMessageBox.warning(self, "Not Connected Warning", "No open connection with Camera")
+                self.ui.buttonStartExperiment.setChecked(False)
+            elif not self.arduino.connected:
+                QtWidgets.QMessageBox.warning(self, "Not Connected Warning", "No open connection with Controller")
+                self.ui.buttonStartExperiment.setChecked(False)
+            else:
+                if not self.working_directory_selected:
+                    QtWidgets.QMessageBox.warning(self, "No valid working directory", "Select a directory to save your experiment")
+                    self.set_working_directory()
 
-    def start_experiment(self):
+                self.experiment_live = True
+                self.ui.buttonStartExperiment.setStyleSheet('color: rgba(255,0,0,255)')
+                self.ui.buttonStartExperiment.setText('Interrupt')
 
-        if self.experiment_live:
+                self.set_experiment_autonaming()
+                self.ui.widgetMetaData.setEnabled(False)
+                self.experiment_name = self.ui.lineeditExperimentName.text()
+
+                self.experiment_path = os.path.join(self.path, "Exp_" + self.experiment_name)
+                if not os.path.exists(self.experiment_path) or not os.path.isdir(self.experiment_path):
+                    os.mkdir(self.experiment_path)
+
+                if self.ui.checkBoxReadSerialLive.isChecked():
+                    self.ui.checkBoxReadSerialLive.setChecked(False)
+                self.ui.checkBoxReadSerialLive.setChecked(True)
+                self.listen_to_serial()
+
+                duration = (self.ui.spinBoxExperimentDurationMinutes.value() * 60) + self.ui.spinBoxExperimentDurationSeconds.value()
+                self.cam.video(os.path.join(self.experiment_path, self.experiment_name), duration)
+                self.Stims.start_stimuli()
+                t = Thread(target=self.wait_for_experiment_end, args=())
+                t.start()
+        else:
             self.experiment_live = False
             self.cam.stop()
             self.ui.checkBoxReadSerialLive.setChecked(False)
@@ -590,7 +635,7 @@ class STD(QtWidgets.QWidget):
             df["exposture"] = [float(self.ui.comboboxCameraExposure.currentText())]
             df["gamma"] = [self.cam.brightness]
             df["brightness"] = [self.cam.brightness]
-            df["infrared"] = [self.ui.sliderIRLight.value]
+            df["infrared"] = [self.ui.sliderIRLight.value()]
 
 
             df.to_csv(os.path.join(self.experiment_path, "metadata.csv"), sep="\t")
@@ -599,38 +644,9 @@ class STD(QtWidgets.QWidget):
             df = pd.DataFrame(np.hstack([self.logged_temperature_time.reshape(-1,1), self.logged_temperature.reshape(-1,1), self.logged_temperature_2.reshape(-1,1)]), columns = ["time", "temperature", "temperature2"])
             df.set_index("time", inplace=True)
             df.to_csv(os.path.join(self.experiment_path, "logged_temperatures.csv"), sep="\t")
+            self.ui.widgetMetaData.setEnabled(True)
 
 
-            self.ui.groupboxMetaData.setEnabled(True)
-
-        elif not self.experiment_live:
-            if not hasattr(self, "cam"):
-                QtWidgets.QMessageBox.warning(self, "Not Connected Warning", "No open connection with Camera or Controller")
-            elif self.cam.cap.isOpened() != True or self.arduino.ser.isOpen() != True:
-                QtWidgets.QMessageBox.warning(self, "Not Connected Warning", "No open connection with Camera or Controller")
-            else:
-                self.experiment_live = True
-                self.ui.buttonStartExperiment.setStyleSheet('color: rgba(255,0,0,255)')
-                self.ui.buttonStartExperiment.setText('Interrupt')
-
-                self.set_experiment_autonaming()
-                self.ui.groupboxMetaData.setEnabled(False)
-                self.experiment_name = self.ui.lineeditExperimentName.text()
-
-                self.experiment_path = os.path.join(self.path, "Exp_" + self.experiment_name)
-                if not os.path.exists(self.experiment_path) or not os.path.isdir(self.experiment_path):
-                    os.mkdir(self.experiment_path)
-
-                if self.ui.checkBoxReadSerialLive.isChecked():
-                    self.ui.checkBoxReadSerialLive.setChecked(False)
-                self.ui.checkBoxReadSerialLive.setChecked(True)
-                self.listen_to_serial()
-
-                duration = (self.ui.spinBoxExperimentDurationMinutes.value() * 60) + self.ui.spinBoxExperimentDurationSeconds.value()
-                self.cam.video(os.path.join(self.experiment_path, self.experiment_name), duration)
-                self.Stims.start_stimuli()
-                t = Thread(target=self.wait_for_experiment_end, args=())
-                t.start()
 
     def wait_for_experiment_end(self):
         time.sleep(0.2)  # Give camera a chance to start.
@@ -638,7 +654,78 @@ class STD(QtWidgets.QWidget):
             time.sleep(0.1)
         else:
             if self.experiment_live:
-                self.start_experiment()
+                self.start_experiment(False)
+                self.ui.buttonStartExperiment.setChecked(False)
+
+    # def start_experiment(self):
+    #
+    #     if self.experiment_live:
+    #         self.experiment_live = False
+    #         self.cam.stop()
+    #         self.ui.checkBoxReadSerialLive.setChecked(False)
+    #         self.ui.buttonStartExperiment.setStyleSheet("color: Black")
+    #         self.ui.buttonStartExperiment.setText("Start Experiment")
+    #
+    #         df = pd.DataFrame()
+    #         df["date"] = [time.strftime("%Y%m%d")]
+    #         df["time"] = [time.strftime("%H%M%S")]
+    #         df["duration"] = [(self.ui.spinBoxExperimentDurationMinutes.value() * 60) + self.ui.spinBoxExperimentDurationSeconds.value()]
+    #         df["drugs"] = [self.ui.lineeditMetaDataDrugName.text()]
+    #         df["genetics"] = [self.ui.lineeditMetaDataGenetics.text()]
+    #         df["framerate"] = [self.cam.framerate]
+    #         df["dechorionated"] = [self.ui.checkboxMetaDataDechorionation.isChecked()]
+    #         df["exposture"] = [float(self.ui.comboboxCameraExposure.currentText())]
+    #         df["gamma"] = [self.cam.brightness]
+    #         df["brightness"] = [self.cam.brightness]
+    #         df["infrared"] = [self.ui.sliderIRLight.value]
+    #
+    #
+    #         df.to_csv(os.path.join(self.experiment_path, "metadata.csv"), sep="\t")
+    #
+    #         self.Stims.df.to_csv(os.path.join(self.experiment_path, "stimuli_profile.csv"), sep="\t")
+    #         df = pd.DataFrame(np.hstack([self.logged_temperature_time.reshape(-1,1), self.logged_temperature.reshape(-1,1), self.logged_temperature_2.reshape(-1,1)]), columns = ["time", "temperature", "temperature2"])
+    #         df.set_index("time", inplace=True)
+    #         df.to_csv(os.path.join(self.experiment_path, "logged_temperatures.csv"), sep="\t")
+    #
+    #
+    #         self.ui.groupboxMetaData.setEnabled(True)
+    #
+    #     elif not self.experiment_live:
+    #         if not hasattr(self, "cam"):
+    #             QtWidgets.QMessageBox.warning(self, "Not Connected Warning", "No open connection with Camera or Controller")
+    #         elif self.cam.cap.isOpened() != True or self.arduino.ser.isOpen() != True:
+    #             QtWidgets.QMessageBox.warning(self, "Not Connected Warning", "No open connection with Camera or Controller")
+    #         else:
+    #             self.experiment_live = True
+    #             self.ui.buttonStartExperiment.setStyleSheet('color: rgba(255,0,0,255)')
+    #             self.ui.buttonStartExperiment.setText('Interrupt')
+    #
+    #             self.set_experiment_autonaming()
+    #             self.ui.groupboxMetaData.setEnabled(False)
+    #             self.experiment_name = self.ui.lineeditExperimentName.text()
+    #
+    #             self.experiment_path = os.path.join(self.path, "Exp_" + self.experiment_name)
+    #             if not os.path.exists(self.experiment_path) or not os.path.isdir(self.experiment_path):
+    #                 os.mkdir(self.experiment_path)
+    #
+    #             if self.ui.checkBoxReadSerialLive.isChecked():
+    #                 self.ui.checkBoxReadSerialLive.setChecked(False)
+    #             self.ui.checkBoxReadSerialLive.setChecked(True)
+    #             self.listen_to_serial()
+    #
+    #             duration = (self.ui.spinBoxExperimentDurationMinutes.value() * 60) + self.ui.spinBoxExperimentDurationSeconds.value()
+    #             self.cam.video(os.path.join(self.experiment_path, self.experiment_name), duration)
+    #             self.Stims.start_stimuli()
+    #             t = Thread(target=self.wait_for_experiment_end, args=())
+    #             t.start()
+
+    # def wait_for_experiment_end(self):
+    #     time.sleep(0.2)  # Give camera a chance to start.
+    #     while self.cam.alive:
+    #         time.sleep(0.1)
+    #     else:
+    #         if self.experiment_live:
+    #             self.start_experiment()
 
     def closeEvent(self, event):
         QtWidgets.QMessageBox.warning(self, "Closing", "Nothing you can do about it")
@@ -660,8 +747,8 @@ if __name__ == "__main__":
     projectWindow = QtGui.QMainWindow()
     projectWindow.resize(800, 600)
     projectWindow.setWindowTitle('Stimuli & Trigger Delivery')
-    std = STD()
-    projectWindow.setCentralWidget(std)
+    immobilize = imMobilize()
+    projectWindow.setCentralWidget(immobilize)
     projectWindow.show()
 
     if (sys.flags.interactive != 1) or not hasattr(QtCore, 'PYQT_VERSION'):

@@ -1,3 +1,4 @@
 # imMobilize
-Program to do stuff
-this line is here so that there is a line here
+### Open software and hardware to do behavioural analysis of small swimming animals.
+
+imMobilize is being built to study the behaviour of _Ciona intestinalis_ larvae.

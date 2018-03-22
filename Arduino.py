@@ -16,7 +16,7 @@ class Arduino:
     def __init__(self):
 
         self.scan_comports()
-
+        self.connected = False
     def scan_comports(self):
 
         ports = list(serial.tools.list_ports.comports())
@@ -39,7 +39,9 @@ class Arduino:
             self.port = self.port_dict[port]
 
             sys.stdout.write("Connected to "+port)
+            time.sleep(0.2)
             self.write("nC")
+            self.connected = True
         except:
             sys.stdout.write("\n Could not connect to controller on "+port)
 
@@ -47,6 +49,7 @@ class Arduino:
 
         if self.ser.isOpen():
             self.ser.close()
+            self.connected = False
 
     def write(self, message):
 

@@ -11,7 +11,7 @@ import pandas as pd
 
 
 
-class Stimuli:
+class StimuliManager:
     def __init__(self, arduino = False):
         
         self.df = pd.DataFrame(columns = ["time_on", "time_off", "message_on", "message_off", "id"])
@@ -71,57 +71,5 @@ class Stimuli:
                     time.sleep(0.05)
                 self.arduino.write(m)
                 sys.stdout.write("\n"+str( elapsed)+" "+ m +"\n")
-        print(" \n Done Delivering Stimuli")
+        sys.stdout.write(" \n Done Delivering Stimuli \n")
     
-#
-#class StimuliManager:
-#    
-#    def __init__(self):
-#        
-#        self.stims = {}
-#        self.next_stim_id = 0
-#    def add_stim(self, stim):
-#        
-#        self.stims[str(self.next_stim_id).zfill(3)] = stim
-#        self.next_stim_id += 1
-#    
-#    def delete_stim(self, stim_id):
-#        del self.stims[stim_id]
-#    
-#    def run_one(self, stim_id):
-#        stim = self.stims[stim_id]
-#        stim.run()
-#        
-#    def run_all(self, controller):
-#        print("startingStims")
-#        for stim in self.stims:
-#            print(stim)
-#            self.stims[stim].run(controller)
-#
-#
-#class Stimulus(Thread):
-#    
-#    def __init__(self, start_message, stop_message, start = 0, duration = 10):
-#        
-#        Thread.__init__(self)
-#        
-#        self.start_message = start_message
-#        self.stop_message = stop_message
-#        self.start = start
-#        self.duration = duration
-#    
-#    def run(self, controller = False):
-#        if controller is False:
-#
-#            time.sleep(self.start)
-#            print(self.start_message)
-#            time.sleep(self.duration)
-#            print(self.stop_message)
-#        else:
-#            
-#            time.sleep(self.start)
-##            controller.write(self.start_message.encode())
-#            print(self.start_message)
-#            time.sleep(self.duration)
-#            print(self.stop_message)
-##            controller.write(self.stop_message.encode())
