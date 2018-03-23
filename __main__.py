@@ -94,7 +94,7 @@ class imMobilize(QtWidgets.QWidget):
 
         self.Stims = StimuliManager(arduino=self.arduino)
         self.set_experiment_view()
-        self.set_stim_name_lineedit()
+        self.set_lightstim_name_lineedit()
         self.ui.buttonDeleteSelectedStim.clicked.connect(self.delete_selected_stim)
         self.ui.buttonDeleteAllStims.clicked.connect(self.delete_all_stims)
         self.ui.buttonLoadStimulusProfile.clicked.connect(self.load_stimuli)
@@ -362,19 +362,19 @@ class imMobilize(QtWidgets.QWidget):
         self.arduino.write(message)
         self.ui.lineeditWriteToSerial.clear()
 
-    def set_stim_name_lineedit(self):
+    def set_lightstim_name_lineedit(self):
         c = 1
-        while "Stim" + str(len(self.Stims.df) + c) in self.Stims.df.id:
+        while "LightStim" + str(len(self.Stims.df) + c) in self.Stims.df.id:
             c += 1
-        newname = "Stim" + str(len(self.Stims.df) + c)
-        self.ui.lineeditStimName.setText(newname)
+        newname = "LightStim" + str(len(self.Stims.df) + c)
+        self.ui.lineeditLightStimName.setText(newname)
 
     def save_lightstim(self):
         """Takes the current settings in the lightstim box and adds them to stim manager"""
 
         start_time = self.ui.spinboxStimStart.value()
         stop_time = self.ui.spinboxStimDuration.value() + start_time
-        stim_id = self.ui.lineeditStimName.text()
+        stim_id = self.ui.lineeditLightStimName.text()
 
         if self.lightStimType == "LED":
             start_message = "n"
@@ -387,7 +387,7 @@ class imMobilize(QtWidgets.QWidget):
             stop_message = "wC"
 
         self.Stims.add_stimulus(start_time, stop_time, start_message, stop_message, stim_id)
-        self.set_stim_name_lineedit()
+        self.set_lightstim_name_lineedit()
 
         self.ui.comboBoxSelectStimId.clear()
         stim_ids = list(set(self.Stims.df.id))
@@ -410,7 +410,7 @@ class imMobilize(QtWidgets.QWidget):
     def load_stimuli(self):
         file = QtWidgets.QFileDialog.getOpenFileName(self, "Select a Stimuli File")
         file = file[0]
-        if os.path.exists(file) and file.endswith(".csv"):
+        if os.path.exists(file) and file.endswith(".txt"):
             df = pd.read_csv(file, delimiter = "\t")
             self.Stims.df = df
             self.set_experiment_view()
@@ -426,8 +426,8 @@ class imMobilize(QtWidgets.QWidget):
             if not filename:
                 break
             else:
-                if not filename.endswith(".csv"):
-                    filename += ".csv"
+                if not filename.endswith(".txt"):
+                    filename += ".txt"
                 self.Stims.df.to_csv(filename, sep = "\t")
                 filename_selected = True
 
@@ -633,17 +633,17 @@ class imMobilize(QtWidgets.QWidget):
             df["framerate"] = [self.cam.framerate]
             df["dechorionated"] = [self.ui.checkboxMetaDataDechorionation.isChecked()]
             df["exposture"] = [float(self.ui.comboboxCameraExposure.currentText())]
-            df["gamma"] = [self.cam.brightness]
+            df["gamma"] = [self.cam.gamma]
             df["brightness"] = [self.cam.brightness]
             df["infrared"] = [self.ui.sliderIRLight.value()]
 
 
-            df.to_csv(os.path.join(self.experiment_path, "metadata.csv"), sep="\t")
+            df.to_csv(os.path.join(self.experiment_path, "metadata.txt"), sep="\t")
 
-            self.Stims.df.to_csv(os.path.join(self.experiment_path, "stimuli_profile.csv"), sep="\t")
+            self.Stims.df.to_csv(os.path.join(self.experiment_path, "stimuli_profile.txt"), sep="\t")
             df = pd.DataFrame(np.hstack([self.logged_temperature_time.reshape(-1,1), self.logged_temperature.reshape(-1,1), self.logged_temperature_2.reshape(-1,1)]), columns = ["time", "temperature", "temperature2"])
             df.set_index("time", inplace=True)
-            df.to_csv(os.path.join(self.experiment_path, "logged_temperatures.csv"), sep="\t")
+            df.to_csv(os.path.join(self.experiment_path, "logged_temperatures.txt"), sep="\t")
             self.ui.widgetMetaData.setEnabled(True)
 
 
@@ -680,12 +680,12 @@ class imMobilize(QtWidgets.QWidget):
     #         df["infrared"] = [self.ui.sliderIRLight.value]
     #
     #
-    #         df.to_csv(os.path.join(self.experiment_path, "metadata.csv"), sep="\t")
+    #         df.to_csv(os.path.join(self.experiment_path, "metadata.txt"), sep="\t")
     #
-    #         self.Stims.df.to_csv(os.path.join(self.experiment_path, "stimuli_profile.csv"), sep="\t")
+    #         self.Stims.df.to_csv(os.path.join(self.experiment_path, "stimuli_profile.txt"), sep="\t")
     #         df = pd.DataFrame(np.hstack([self.logged_temperature_time.reshape(-1,1), self.logged_temperature.reshape(-1,1), self.logged_temperature_2.reshape(-1,1)]), columns = ["time", "temperature", "temperature2"])
     #         df.set_index("time", inplace=True)
-    #         df.to_csv(os.path.join(self.experiment_path, "logged_temperatures.csv"), sep="\t")
+    #         df.to_csv(os.path.join(self.experiment_path, "logged_temperatures.txt"), sep="\t")
     #
     #
     #         self.ui.groupboxMetaData.setEnabled(True)
