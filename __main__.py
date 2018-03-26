@@ -87,6 +87,15 @@ class imMobilize(QtWidgets.QWidget):
         self.toggle_lightstim_type()
 
         """
+        ====================================================================
+        Connecting buttons and controls in vibration stimuli group
+        ====================================================================
+        """
+
+        self.ui.buttonSaveVibrationStim.clicked.connect(self.save_vibration_stim)
+        
+        
+        """
         =====================================================================
         Connecting the buttons and controls in the stimuli manager group
         =====================================================================
@@ -95,6 +104,7 @@ class imMobilize(QtWidgets.QWidget):
         self.Stims = StimuliManager(arduino=self.arduino)
         self.set_experiment_view()
         self.set_lightstim_name_lineedit()
+        self.set_vibrationstim_name_lineedit()
         self.ui.buttonDeleteSelectedStim.clicked.connect(self.delete_selected_stim)
         self.ui.buttonDeleteAllStims.clicked.connect(self.delete_all_stims)
         self.ui.buttonLoadStimulusProfile.clicked.connect(self.load_stimuli)
@@ -273,6 +283,9 @@ class imMobilize(QtWidgets.QWidget):
                 b = int(on[6:])
                 box = LinearRegionItem(values=(start, stop), brush=(r, g, b, 50), movable=False)
                 self.ui.graphicsView.addItem(box)
+            elif self.Stims.df.message_on.iloc[ii].startswith("v"):
+                box = LinearRegionItem(values = (start, stop), brush="k", movable = False)
+                self.ui.graphicsView.addItem(box)
 
         self.ui.comboBoxSelectStimId.clear()
         for stim_id in set(self.Stims.df.id):
@@ -389,6 +402,31 @@ class imMobilize(QtWidgets.QWidget):
         self.Stims.add_stimulus(start_time, stop_time, start_message, stop_message, stim_id)
         self.set_lightstim_name_lineedit()
 
+        self.ui.comboBoxSelectStimId.clear()
+        stim_ids = list(set(self.Stims.df.id))
+        stim_ids.sort()
+        for stim_id in stim_ids:
+            self.ui.comboBoxSelectStimId.addItem(stim_id)
+        self.set_experiment_view()
+
+
+    def set_vibrationstim_name_lineedit(self):
+        c = 1
+        while "VibrationStim" + str(len(self.Stims.df) + c) in self.Stims.df.id:
+            c += 1
+        newname = "VibrationStim" + str(len(self.Stims.df) + c)
+        self.ui.lineeditVibrationStimName.setText(newname)
+        
+    def save_vibration_stim(self):
+        """takes the current settings in the vibration stim box and adds it to the stim manager"""
+        start_time = self.ui.spinBoxVibrationStart.value()
+        duration = self.ui.spinBoxVibrationDuration.value()
+        freq = self.ui.spinBoxVibrationFrequency.value()
+        start_message = "v"+str(freq).zfill(3)+str(int(duration*1000)).zfill(4)
+        stop_message = ""
+        stim_id = self.ui.lineeditVibrationStimName.text()
+        self.Stims.add_stimulus(start_time, start_time+duration, start_message, stop_message, stim_id)
+        self.set_vibrationstim_name_lineedit()
         self.ui.comboBoxSelectStimId.clear()
         stim_ids = list(set(self.Stims.df.id))
         stim_ids.sort()

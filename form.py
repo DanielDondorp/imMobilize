@@ -380,7 +380,7 @@ class Ui_Form(object):
         self.sliderGreen.setOrientation(QtCore.Qt.Vertical)
         self.sliderGreen.setObjectName("sliderGreen")
         self.widget_2 = QtWidgets.QWidget(self.lightStimuliGroup)
-        self.widget_2.setGeometry(QtCore.QRect(80, 0, 231, 191))
+        self.widget_2.setGeometry(QtCore.QRect(80, 0, 221, 191))
         self.widget_2.setObjectName("widget_2")
         self.gridLayout_8 = QtWidgets.QGridLayout(self.widget_2)
         self.gridLayout_8.setContentsMargins(0, 0, 0, 0)
@@ -431,7 +431,7 @@ class Ui_Form(object):
         self.tabWidget.addTab(self.tabExperiment, "")
 
         self.retranslateUi(Form)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         self.sliderBlue.sliderMoved['int'].connect(self.labelBlueSliderValue.setNum)
         self.sliderGreen.sliderMoved['int'].connect(self.labelGreenSliderValue.setNum)
         self.sliderRed.sliderMoved['int'].connect(self.labelRedSliderValue.setNum)
