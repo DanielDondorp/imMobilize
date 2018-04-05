@@ -1,6 +1,4 @@
 #include <Adafruit_NeoPixel.h>
-
-
 #include <OneWire.h> 
 #include <DallasTemperature.h>
 
