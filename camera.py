@@ -175,7 +175,7 @@ class Camera:
                     frame = self.gamma_correction(frame, self.gamma)
                 out.write(frame)
                 fc +=1
-                cv2.imshow('Recording',frame)
+                # cv2.imshow('Recording',frame)
             
             end_time = time.time()
             sys.stdout.write("\r Recording! "+str(np.round((end_time-start_time),2))+"/"+str(duration)+" seconds       ")
@@ -183,7 +183,7 @@ class Camera:
         else:
             sys.stdout.write("\n Recording Complete! Saved as "+name + "Framecount: "+str(fc))
             
-            cv2.destroyWindow("Recording")
+            # cv2.destroyWindow("Recording")
             out.release()
             self.alive = False
     
