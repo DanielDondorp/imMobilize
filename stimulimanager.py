@@ -58,7 +58,7 @@ class StimuliManager:
             start = time.time()
             for t, m in zip(ts, ms):
                 time.sleep(t)
-                print(m, time.time()-start)
+                sys.stdout.write("\n" + str(elapsed) + " " + m + "\n")
                 
                 #More active Monitoring Mechanism:
                 # elapsed = time.time() - start
@@ -71,6 +71,7 @@ class StimuliManager:
             for t, m in zip(ts, ms):
                 time.sleep(t)
                 self.arduino.write(m)
+                sys.stdout.write("\n" + str(elapsed) + " " + m + "\n")
                 
                 #More active monitoring mechanism commented out to save cputime and make stimmanager lighter
 #                elapsed = time.time() - start
