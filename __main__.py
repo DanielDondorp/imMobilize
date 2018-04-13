@@ -36,7 +36,7 @@ class imMobilize(QtWidgets.QWidget):
 
         self.ui = Ui_Form()
         self.ui.setupUi(self)
-
+        os.chdir("D:\\")
         self.working_directory_selected = False
         """
         ==============================================================
@@ -333,6 +333,8 @@ class imMobilize(QtWidgets.QWidget):
             self.ui.graphicsViewSerial.clear()
             self.temperature_plot = PlotDataItem(pen = (0,153,153))
             self.temperature_plot_2 = PlotDataItem(pen = (255,128,0))
+            self.temperature_plot.setDownsampling(auto=True, method = "mean")
+            self.temperature_plot_2.setDownsampling(auto=True, method="mean")
             self.ui.graphicsViewSerial.addItem(self.temperature_plot)
             self.ui.graphicsViewSerial.addItem(self.temperature_plot_2)
             t = Thread(target=self.start_listening, args = ())
@@ -577,6 +579,7 @@ class imMobilize(QtWidgets.QWidget):
         self.ui.spinBoxFramerate.setValue(30)
 
     def record_video(self, event):
+
         if event:
             self.ui.buttonRecordVideo.setText("Stop")
             self.ui.buttonRecordVideo.setStyleSheet("color:red")
@@ -591,7 +594,8 @@ class imMobilize(QtWidgets.QWidget):
 
             duration = self.ui.spinBoxVideoTimeMinutes.value() * 60
             duration += self.ui.spinBoxVideoTimeSeconds.value()
-            self.cam.video(name, duration)
+            preview = self.ui.checkBoxPreviewWhileRecording.isChecked()
+            self.cam.video(name, duration, preview)
 
             t = Thread(target=self.wait_for_recording_end)
             t.start()
@@ -604,6 +608,7 @@ class imMobilize(QtWidgets.QWidget):
             self.cam.stop()
 
     def wait_for_recording_end(self):
+        time.sleep(0.1)
         while self.cam.alive == True:
             time.sleep(0.1)
         else:
@@ -651,7 +656,8 @@ class imMobilize(QtWidgets.QWidget):
                 self.listen_to_serial()
 
                 duration = (self.ui.spinBoxExperimentDurationMinutes.value() * 60) + self.ui.spinBoxExperimentDurationSeconds.value()
-                self.cam.video(os.path.join(self.experiment_path, self.experiment_name), duration)
+                preview = self.ui.checkBoxPreviewWhileRecording.isChecked()
+                self.cam.video(os.path.join(self.experiment_path, self.experiment_name), duration, preview)
                 self.Stims.start_stimuli()
                 t = Thread(target=self.wait_for_experiment_end, args=())
                 t.start()
@@ -668,6 +674,7 @@ class imMobilize(QtWidgets.QWidget):
             df["duration"] = [(self.ui.spinBoxExperimentDurationMinutes.value() * 60) + self.ui.spinBoxExperimentDurationSeconds.value()]
             df["drugs"] = [self.ui.lineeditMetaDataDrugName.text()]
             df["genetics"] = [self.ui.lineeditMetaDataGenetics.text()]
+            df["age"] = [self.ui.spinboxAge]
             df["framerate"] = [self.cam.framerate]
             df["dechorionated"] = [self.ui.checkboxMetaDataDechorionation.isChecked()]
             df["exposture"] = [float(self.ui.comboboxCameraExposure.currentText())]
@@ -689,7 +696,7 @@ class imMobilize(QtWidgets.QWidget):
     def wait_for_experiment_end(self):
         time.sleep(0.2)  # Give camera a chance to start.
         while self.cam.alive:
-            time.sleep(0.1)
+            time.sleep(0.2)
         else:
             if self.experiment_live:
                 self.start_experiment(False)
@@ -783,7 +790,7 @@ if __name__ == "__main__":
     app = QtGui.QApplication([])
 
     projectWindow = QtGui.QMainWindow()
-    projectWindow.resize(800, 600)
+    projectWindow.resize(675, 510)
     projectWindow.setWindowTitle('Stimuli & Trigger Delivery')
     immobilize = imMobilize()
     projectWindow.setCentralWidget(immobilize)

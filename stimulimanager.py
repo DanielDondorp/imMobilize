@@ -57,19 +57,27 @@ class StimuliManager:
             sys.stdout.write("\n No controller selected! Stims only printed to console. \n")
             start = time.time()
             for t, m in zip(ts, ms):
-                elapsed = time.time() - start
-                while elapsed <= t:
-                    elapsed = time.time() - start
-                    time.sleep(0.05)
-                sys.stdout.write("\n"+str( elapsed)+" "+ m +"\n")
+                time.sleep(t)
+                print(m, time.time()-start)
+                
+                #More active Monitoring Mechanism:
+                # elapsed = time.time() - start
+                # while elapsed <= t:
+                #     elapsed = time.time() - start
+                #     time.sleep(0.05)
+                # sys.stdout.write("\n"+str( elapsed)+" "+ m +"\n")
         else:
             start = time.time()
             for t, m in zip(ts, ms):
-                elapsed = time.time() - start
-                while elapsed <= t:
-                    elapsed = time.time() - start
-                    time.sleep(0.05)
+                time.sleep(t)
                 self.arduino.write(m)
-                sys.stdout.write("\n"+str( elapsed)+" "+ m +"\n")
+                
+                #More active monitoring mechanism commented out to save cputime and make stimmanager lighter
+#                elapsed = time.time() - start
+#                while elapsed <= t:
+#                    elapsed = time.time() - start
+#                    time.sleep(0.05)
+#                self.arduino.write(m)
+#                sys.stdout.write("\n"+str( elapsed)+" "+ m +"\n")
         sys.stdout.write(" \n Done Delivering Stimuli \n")
     
