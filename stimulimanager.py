@@ -1,7 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Feb  2 10:28:07 2018
+Created on Tue Apr 17 16:24:17 2018
 
+@author: install
+"""
+
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Feb  2 10:28:07 2018
 @author: ddo003
 """
 
@@ -39,14 +45,14 @@ class StimuliManager:
             s = self.df.iloc[ii]
             ts.append(s.time_on)
             ms.append(s.message_on)
-            ts.append(s.time_off - s.time_on)
+            ts.append(s.time_off)
             ms.append(s.message_off)
         
         tm = pd.DataFrame(dict(zip(["time", "message"],[ts,ms])))
         tm = tm.sort_values("time")
         
         ts = tm.time
-        print(ts)
+        print(ts, tm)
         ms = tm.message
         
         thread = Thread(target = self._run, args = (ts, ms,))
@@ -57,30 +63,29 @@ class StimuliManager:
             sys.stdout.write("\n No controller selected! Stims only printed to console. \n")
             start = time.time()
             for t, m in zip(ts, ms):
-                time.sleep(t)
-                elapsed = time.time() - start
-                sys.stdout.write("\n" + str(elapsed) + " " + m + "\n")
+#                time.sleep(t)
+#                elapsed = time.time() - start
+#                sys.stdout.write("\n" + str(elapsed) + " " + m + "\n")
                 
                 #More active Monitoring Mechanism:
-                # elapsed = time.time() - start
-                # while elapsed <= t:
-                #     elapsed = time.time() - start
-                #     time.sleep(0.05)
-                # sys.stdout.write("\n"+str( elapsed)+" "+ m +"\n")
+                 elapsed = time.time() - start
+                 while elapsed <= t:
+                     elapsed = time.time() - start
+                     time.sleep(0.05)
+                 sys.stdout.write("\n"+str( elapsed)+" "+ m +"\n")
         else:
             start = time.time()
             for t, m in zip(ts, ms):
-                time.sleep(t)
-                elapsed = time.time() - start
-                self.arduino.write(m)
-                sys.stdout.write("\n" + str(elapsed) + " " + m + "\n")
-                
-                #More active monitoring mechanism commented out to save cputime and make stimmanager lighter
+#                time.sleep(t)
 #                elapsed = time.time() - start
-#                while elapsed <= t:
-#                    elapsed = time.time() - start
-#                    time.sleep(0.05)
 #                self.arduino.write(m)
-#                sys.stdout.write("\n"+str( elapsed)+" "+ m +"\n")
+#                sys.stdout.write("\n" + str(elapsed) + " " + m + "\n")
+                
+#                More active monitoring mechanism commented out to save cputime and make stimmanager lighter
+                elapsed = time.time() - start
+                while elapsed <= t:
+                    elapsed = time.time() - start
+                    time.sleep(0.1)
+                self.arduino.write(m)
+                sys.stdout.write("\n"+str( elapsed)+" "+ m +"\n")
         sys.stdout.write(" \n Done Delivering Stimuli \n")
-    
