@@ -677,7 +677,7 @@ class imMobilize(QtWidgets.QWidget):
             df["age"] = [self.ui.spinboxAge]
             df["framerate"] = [self.cam.framerate]
             df["dechorionated"] = [self.ui.checkboxMetaDataDechorionation.isChecked()]
-            df["exposture"] = [float(self.ui.comboboxCameraExposure.currentText())]
+            df["exposure"] = [float(self.ui.comboboxCameraExposure.currentText())]
             df["gamma"] = [self.cam.gamma]
             df["brightness"] = [self.cam.brightness]
             df["infrared"] = [self.ui.sliderIRLight.value()]
@@ -686,6 +686,7 @@ class imMobilize(QtWidgets.QWidget):
             df.to_csv(os.path.join(self.experiment_path, "metadata.txt"), sep="\t")
 
             self.Stims.df.to_csv(os.path.join(self.experiment_path, "stimuli_profile.txt"), sep="\t")
+            
             df = pd.DataFrame(np.hstack([self.logged_temperature_time.reshape(-1,1), self.logged_temperature.reshape(-1,1), self.logged_temperature_2.reshape(-1,1)]), columns = ["time", "temperature", "temperature2"])
             df.set_index("time", inplace=True)
             df.to_csv(os.path.join(self.experiment_path, "logged_temperatures.txt"), sep="\t")
