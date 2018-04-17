@@ -39,7 +39,7 @@ class StimuliManager:
             s = self.df.iloc[ii]
             ts.append(s.time_on)
             ms.append(s.message_on)
-            ts.append(s.time_off)
+            ts.append(s.time_off - s.time_on)
             ms.append(s.message_off)
         
         tm = pd.DataFrame(dict(zip(["time", "message"],[ts,ms])))
