@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>806</width>
-    <height>600</height>
+    <width>676</width>
+    <height>515</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,8 +24,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>801</width>
-     <height>601</height>
+     <width>671</width>
+     <height>508</height>
     </rect>
    </property>
    <property name="currentIndex">
@@ -35,507 +35,397 @@
     <attribute name="title">
      <string>Camera and Serial Connection</string>
     </attribute>
-    <widget class="QGroupBox" name="groupBox_4">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>315</x>
-       <y>155</y>
-       <width>281</width>
-       <height>191</height>
-      </rect>
-     </property>
-     <property name="title">
-      <string>Live Data From Serial Connection</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_4">
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_19">
-        <property name="text">
-         <string>Incoming Message:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLabel" name="labelSerialLiveIncoming">
-        <property name="text">
-         <string>[No Data Yet]</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_20">
-        <property name="text">
-         <string>Temperature:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLabel" name="labelSerialLiveTemperature">
-        <property name="text">
-         <string>[No Data Yet]</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0" colspan="2">
-       <widget class="PlotWidget" name="graphicsViewSerial"/>
-      </item>
-     </layout>
-    </widget>
-    <widget class="QGroupBox" name="serialControlsGroup">
-     <property name="geometry">
-      <rect>
-       <x>315</x>
-       <y>0</y>
-       <width>281</width>
-       <height>153</height>
-      </rect>
-     </property>
-     <property name="title">
-      <string>Serial Connection to Setup</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_5">
-      <item row="2" column="1" colspan="2">
-       <widget class="QPushButton" name="buttonSerialConnect">
-        <property name="text">
-         <string>Connect</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0" colspan="3">
-       <widget class="QLabel" name="labelSerialConnected">
-        <property name="layoutDirection">
-         <enum>Qt::LeftToRight</enum>
-        </property>
-        <property name="text">
-         <string>Status: Not Connected</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0" colspan="2">
-       <widget class="QLineEdit" name="lineeditWriteToSerial">
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Write to the Controller:&lt;br/&gt;White light on: &amp;quot;wS&amp;quot;&lt;br/&gt;White light off: &amp;quot;wC&amp;quot;&lt;/p&gt;&lt;p&gt;For LEDs: &amp;quot;n&amp;quot;+ nine digits setting RGB values&lt;br/&gt;example: &amp;quot;n000255000&amp;quot; set green leds on.&lt;br/&gt;LEDs off: &amp;quot;nC&amp;quot;&lt;/p&gt;&lt;p&gt;set IR light: &amp;quot;i&amp;quot;+three digits&lt;br/&gt;example: &amp;quot;i255&amp;quot; sets IR to full power.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QPushButton" name="buttonSerialScan">
-        <property name="text">
-         <string>Scan</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="2">
-       <widget class="QPushButton" name="buttonWriteToSerial">
-        <property name="text">
-         <string>Send</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0" colspan="3">
-       <widget class="QComboBox" name="comboboxSerialAvailable"/>
-      </item>
-      <item row="4" column="0" colspan="3">
-       <widget class="QCheckBox" name="checkBoxReadSerialLive">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>Read Serial Live</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-    <widget class="QGroupBox" name="groupBoxCameraControls">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>100</y>
-       <width>311</width>
-       <height>191</height>
-      </rect>
-     </property>
-     <property name="title">
-      <string>Camera Controls</string>
-     </property>
-     <widget class="QPushButton" name="buttonCameraPreview">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>149</y>
-        <width>211</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Live Preview</string>
-      </property>
-      <property name="checkable">
-       <bool>true</bool>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_5">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>28</y>
-        <width>50</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Framerate</string>
-      </property>
-     </widget>
-     <widget class="QSpinBox" name="spinBoxFramerate">
-      <property name="geometry">
-       <rect>
-        <x>66</x>
-        <y>28</y>
-        <width>43</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="autoFillBackground">
-       <bool>true</bool>
-      </property>
-      <property name="keyboardTracking">
-       <bool>false</bool>
-      </property>
-      <property name="minimum">
-       <number>1</number>
-      </property>
-      <property name="maximum">
-       <number>200</number>
-      </property>
-      <property name="value">
-       <number>30</number>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_6">
-      <property name="geometry">
-       <rect>
-        <x>115</x>
-        <y>28</y>
-        <width>16</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>fps</string>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="comboboxCameraExposure">
-      <property name="geometry">
-       <rect>
-        <x>232</x>
-        <y>28</y>
-        <width>69</width>
-        <height>20</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_9">
-      <property name="geometry">
-       <rect>
-        <x>156</x>
-        <y>28</y>
-        <width>45</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Exposure</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_7">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>59</y>
-        <width>50</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Brightness</string>
-      </property>
-     </widget>
-     <widget class="QSlider" name="sliderCameraBrightness">
-      <property name="geometry">
-       <rect>
-        <x>70</x>
-        <y>60</y>
-        <width>201</width>
-        <height>19</height>
-       </rect>
-      </property>
-      <property name="minimum">
-       <number>-10</number>
-      </property>
-      <property name="maximum">
-       <number>30</number>
-      </property>
-      <property name="value">
-       <number>0</number>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
-     <widget class="QLabel" name="labelCameraBrighness">
-      <property name="geometry">
-       <rect>
-        <x>281</x>
-        <y>59</y>
-        <width>16</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>0</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_8">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>89</y>
-        <width>35</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Gamma</string>
-      </property>
-     </widget>
-     <widget class="QSlider" name="sliderCameraGamma">
-      <property name="geometry">
-       <rect>
-        <x>66</x>
-        <y>89</y>
-        <width>201</width>
-        <height>19</height>
-       </rect>
-      </property>
-      <property name="maximum">
-       <number>30</number>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="tickPosition">
-       <enum>QSlider::NoTicks</enum>
-      </property>
-     </widget>
-     <widget class="QLabel" name="labelCameraGamma">
-      <property name="geometry">
-       <rect>
-        <x>280</x>
-        <y>89</y>
-        <width>16</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>0</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_21">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>119</y>
-        <width>37</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>IR Light</string>
-      </property>
-     </widget>
-     <widget class="QSlider" name="sliderIRLight">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>66</x>
-        <y>119</y>
-        <width>201</width>
-        <height>19</height>
-       </rect>
-      </property>
-      <property name="maximum">
-       <number>255</number>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_22">
-      <property name="geometry">
-       <rect>
-        <x>280</x>
-        <y>119</y>
-        <width>16</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>0</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="buttonCameraResetProperties">
-      <property name="geometry">
-       <rect>
-        <x>220</x>
-        <y>150</y>
-        <width>75</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>reset</string>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QGroupBox" name="groupBoxVideoControls">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>290</y>
-       <width>311</width>
-       <height>108</height>
-      </rect>
-     </property>
-     <property name="title">
-      <string>VideoControls</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_3">
-      <item row="0" column="0">
-       <widget class="QLabel" name="labelVideoName">
-        <property name="text">
-         <string>Video Name</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1" colspan="4">
-       <widget class="QLineEdit" name="lineeditVideoName">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="5">
-       <widget class="QCheckBox" name="checkboxAutoNaming">
-        <property name="text">
-         <string>Automatic</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>Duration</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1" colspan="2">
-       <widget class="QSpinBox" name="spinBoxVideoTimeMinutes">
-        <property name="value">
-         <number>5</number>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3">
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>minutes</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="4">
-       <widget class="QSpinBox" name="spinBoxVideoTimeSeconds"/>
-      </item>
-      <item row="1" column="5">
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>seconds</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0" colspan="2">
-       <widget class="QPushButton" name="buttonSetPath">
-        <property name="text">
-         <string>Set Path</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="2" colspan="3">
-       <widget class="QPushButton" name="buttonRecordVideo">
-        <property name="text">
-         <string>Record</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-    <widget class="QGroupBox" name="groupBoxCameraConnection">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>311</width>
-       <height>101</height>
-      </rect>
-     </property>
-     <property name="title">
-      <string>Connect To Camera</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_2">
-      <item row="0" column="0" colspan="2">
-       <widget class="QLabel" name="labelCameraConnectionStatus">
-        <property name="text">
-         <string>Status: Not Connected</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0" colspan="2">
-       <widget class="QComboBox" name="comboBoxConnectedCameras"/>
-      </item>
-      <item row="2" column="0">
-       <widget class="QPushButton" name="buttonScanForCameras">
-        <property name="text">
-         <string>scan</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QPushButton" name="buttonCameraConnectDisconnect">
-        <property name="text">
-         <string>connect</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
+    <layout class="QGridLayout" name="gridLayout_10">
+     <item row="0" column="0">
+      <widget class="QGroupBox" name="groupBoxCameraConnection">
+       <property name="title">
+        <string>Connect To Camera</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0" colspan="2">
+         <widget class="QLabel" name="labelCameraConnectionStatus">
+          <property name="text">
+           <string>Status: Not Connected</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0" colspan="2">
+         <widget class="QComboBox" name="comboBoxConnectedCameras"/>
+        </item>
+        <item row="2" column="0">
+         <widget class="QPushButton" name="buttonScanForCameras">
+          <property name="text">
+           <string>scan</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QPushButton" name="buttonCameraConnectDisconnect">
+          <property name="text">
+           <string>connect</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="0" column="1" rowspan="2">
+      <widget class="QGroupBox" name="serialControlsGroup">
+       <property name="title">
+        <string>Serial Connection to Setup</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_5">
+        <item row="2" column="1" colspan="2">
+         <widget class="QPushButton" name="buttonSerialConnect">
+          <property name="text">
+           <string>Connect</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0" colspan="3">
+         <widget class="QLabel" name="labelSerialConnected">
+          <property name="layoutDirection">
+           <enum>Qt::LeftToRight</enum>
+          </property>
+          <property name="text">
+           <string>Status: Not Connected</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0" colspan="2">
+         <widget class="QLineEdit" name="lineeditWriteToSerial">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Write to the Controller:&lt;br/&gt;White light on: &amp;quot;wS&amp;quot;&lt;br/&gt;White light off: &amp;quot;wC&amp;quot;&lt;/p&gt;&lt;p&gt;For LEDs: &amp;quot;n&amp;quot;+ nine digits setting RGB values&lt;br/&gt;example: &amp;quot;n000255000&amp;quot; set green leds on.&lt;br/&gt;LEDs off: &amp;quot;nC&amp;quot;&lt;/p&gt;&lt;p&gt;set IR light: &amp;quot;i&amp;quot;+three digits&lt;br/&gt;example: &amp;quot;i255&amp;quot; sets IR to full power.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QPushButton" name="buttonSerialScan">
+          <property name="text">
+           <string>Scan</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="2">
+         <widget class="QPushButton" name="buttonWriteToSerial">
+          <property name="text">
+           <string>Send</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0" colspan="3">
+         <widget class="QComboBox" name="comboboxSerialAvailable"/>
+        </item>
+        <item row="4" column="0" colspan="3">
+         <widget class="QCheckBox" name="checkBoxReadSerialLive">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>Read Serial Live</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="1" column="0" rowspan="2">
+      <widget class="QGroupBox" name="groupBoxCameraControls">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="title">
+        <string>Camera Controls</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_9">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_5">
+          <property name="text">
+           <string>Framerate</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QSpinBox" name="spinBoxFramerate">
+          <property name="autoFillBackground">
+           <bool>true</bool>
+          </property>
+          <property name="keyboardTracking">
+           <bool>false</bool>
+          </property>
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>200</number>
+          </property>
+          <property name="value">
+           <number>30</number>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QLabel" name="label_6">
+          <property name="text">
+           <string>fps</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3">
+         <widget class="QLabel" name="label_9">
+          <property name="text">
+           <string>Exposure</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="4" colspan="2">
+         <widget class="QComboBox" name="comboboxCameraExposure"/>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_7">
+          <property name="text">
+           <string>Brightness</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1" colspan="5">
+         <widget class="QSlider" name="sliderCameraBrightness">
+          <property name="minimum">
+           <number>-10</number>
+          </property>
+          <property name="maximum">
+           <number>30</number>
+          </property>
+          <property name="value">
+           <number>0</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="6">
+         <widget class="QLabel" name="labelCameraBrighness">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_8">
+          <property name="text">
+           <string>Gamma</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1" colspan="5">
+         <widget class="QSlider" name="sliderCameraGamma">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gamma calculations will not be performed for framerates higher than 50fps.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="maximum">
+           <number>30</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="tickPosition">
+           <enum>QSlider::NoTicks</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="6">
+         <widget class="QLabel" name="labelCameraGamma">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_21">
+          <property name="text">
+           <string>IR Light</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1" colspan="5">
+         <widget class="QSlider" name="sliderIRLight">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="maximum">
+           <number>255</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="6">
+         <widget class="QLabel" name="label_22">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0" colspan="5">
+         <widget class="QPushButton" name="buttonCameraPreview">
+          <property name="text">
+           <string>Live Preview</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="5" colspan="2">
+         <widget class="QPushButton" name="buttonCameraResetProperties">
+          <property name="text">
+           <string>reset</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0" colspan="4">
+         <widget class="QCheckBox" name="checkBoxPreviewWhileRecording">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Check this box to show the camerafeed during recordings. Recommended to uncheck when multiple recordings are being acquired.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Preview While Recording</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="2" column="1" rowspan="2">
+      <widget class="QGroupBox" name="groupBox_4">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="title">
+        <string>Live Data From Serial Connection</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_4">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_19">
+          <property name="text">
+           <string>Time (seconds):</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="labelSerialLiveIncoming">
+          <property name="text">
+           <string>[No Data Yet]</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_20">
+          <property name="text">
+           <string>Temperature:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLabel" name="labelSerialLiveTemperature">
+          <property name="text">
+           <string>[No Data Yet]</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0" colspan="2">
+         <widget class="PlotWidget" name="graphicsViewSerial"/>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QGroupBox" name="groupBoxVideoControls">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="title">
+        <string>VideoControls</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="0">
+         <widget class="QLabel" name="labelVideoName">
+          <property name="text">
+           <string>Video Name</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1" colspan="4">
+         <widget class="QLineEdit" name="lineeditVideoName">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="5">
+         <widget class="QCheckBox" name="checkboxAutoNaming">
+          <property name="text">
+           <string>Automatic</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Duration</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1" colspan="2">
+         <widget class="QSpinBox" name="spinBoxVideoTimeMinutes">
+          <property name="value">
+           <number>5</number>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="3">
+         <widget class="QLabel" name="label_3">
+          <property name="text">
+           <string>minutes</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="4">
+         <widget class="QSpinBox" name="spinBoxVideoTimeSeconds"/>
+        </item>
+        <item row="1" column="5">
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>seconds</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0" colspan="2">
+         <widget class="QPushButton" name="buttonSetPath">
+          <property name="text">
+           <string>Set Path</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="2" colspan="3">
+         <widget class="QPushButton" name="buttonRecordVideo">
+          <property name="text">
+           <string>Record</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
    </widget>
    <widget class="QWidget" name="tabExperiment">
     <attribute name="title">
@@ -544,7 +434,7 @@
     <widget class="QGroupBox" name="groupBox_2">
      <property name="geometry">
       <rect>
-       <x>450</x>
+       <x>320</x>
        <y>0</y>
        <width>341</width>
        <height>191</height>
@@ -610,8 +500,8 @@
     <widget class="QGroupBox" name="groupboxMetaData">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>190</y>
+       <x>140</x>
+       <y>200</y>
        <width>387</width>
        <height>205</height>
       </rect>
@@ -620,23 +510,6 @@
       <string>MetaData</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_6">
-      <item row="1" column="2" colspan="2">
-       <widget class="QPushButton" name="buttonStartExperiment">
-        <property name="text">
-         <string>Start Experiment</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0" colspan="2">
-       <widget class="QPushButton" name="buttonSetWorkingDirectory">
-        <property name="text">
-         <string>Set Working Directory</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="0" colspan="4">
        <widget class="QWidget" name="widgetMetaData" native="true">
         <layout class="QGridLayout" name="gridLayout_7">
@@ -713,7 +586,7 @@
           </widget>
          </item>
          <item row="3" column="4">
-          <widget class="QSpinBox" name="spinBox"/>
+          <widget class="QSpinBox" name="spinboxAge"/>
          </item>
          <item row="3" column="5" colspan="2">
           <widget class="QCheckBox" name="checkboxMetaDataDechorionation">
@@ -786,6 +659,23 @@
         </layout>
        </widget>
       </item>
+      <item row="1" column="2" colspan="2">
+       <widget class="QPushButton" name="buttonStartExperiment">
+        <property name="text">
+         <string>Start Experiment</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="2">
+       <widget class="QPushButton" name="buttonSetWorkingDirectory">
+        <property name="text">
+         <string>Set Working Directory</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
     <widget class="QGroupBox" name="groupBoxVibrationStimuli">
@@ -794,8 +684,8 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>320</x>
-       <y>0</y>
+       <x>10</x>
+       <y>200</y>
        <width>131</width>
        <height>191</height>
       </rect>
@@ -1284,12 +1174,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>84</x>
-     <y>343</y>
+     <x>94</x>
+     <y>345</y>
     </hint>
     <hint type="destinationlabel">
-     <x>130</x>
-     <y>341</y>
+     <x>187</x>
+     <y>345</y>
     </hint>
    </hints>
   </connection>
@@ -1300,12 +1190,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>67</x>
-     <y>339</y>
+     <x>88</x>
+     <y>345</y>
     </hint>
     <hint type="destinationlabel">
-     <x>245</x>
-     <y>336</y>
+     <x>293</x>
+     <y>345</y>
     </hint>
    </hints>
   </connection>
@@ -1316,12 +1206,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>78</x>
-     <y>357</y>
+     <x>94</x>
+     <y>368</y>
     </hint>
     <hint type="destinationlabel">
-     <x>131</x>
-     <y>363</y>
+     <x>187</x>
+     <y>368</y>
     </hint>
    </hints>
   </connection>
@@ -1332,12 +1222,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>74</x>
-     <y>363</y>
+     <x>94</x>
+     <y>368</y>
     </hint>
     <hint type="destinationlabel">
-     <x>246</x>
-     <y>361</y>
+     <x>293</x>
+     <y>368</y>
     </hint>
    </hints>
   </connection>
@@ -1348,12 +1238,12 @@
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>339</x>
-     <y>268</y>
+     <x>379</x>
+     <y>278</y>
     </hint>
     <hint type="destinationlabel">
-     <x>297</x>
-     <y>268</y>
+     <x>130</x>
+     <y>278</y>
     </hint>
    </hints>
   </connection>

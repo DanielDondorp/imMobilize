@@ -22,7 +22,7 @@ class Arduino:
         ports = list(serial.tools.list_ports.comports())
         self.port_dict = {}
         for p in ports:
-            if "intel" not in p[1].lower():
+            if "intel" not in p[1].lower() and "communications" not in p[1].lower():
                 self.port_dict[p[1]] = p[0]
 
         return self.port_dict

@@ -3,7 +3,6 @@
 #include <DallasTemperature.h>
 
 #define ONE_WIRE_BUS 2
-
 #define PIN            4
 #define NUMPIXELS      16
 
@@ -18,11 +17,13 @@ String inputString = "";         // a string to hold incoming data
 boolean stringComplete = false;  // whether the string is complete
 int sending_time, now;
 int white_light = 5;
-int ir_leds = 6;
+int ir_leds = 9;
 int vibration_motor = 3;
 double t1, t2;
 void setup() {
   // initialize serial:
+  setPwmFrequency(ir_leds, 1);
+  
   Serial.begin(115200);
   Serial.setTimeout(10);
   
@@ -60,8 +61,6 @@ void loop() {
          pixels.setPixelColor(i, pixels.Color(r,g,b)); 
          }
       pixels.show();
-  
-
      }
    }
    else if(inputString.startsWith("wS")){
@@ -70,7 +69,7 @@ void loop() {
    else if(inputString.startsWith("wC")){
     digitalWrite(white_light, LOW);
    }
-   else if(inputString.startsWith("l")){
+   else if(inputString.startsWith("i")){
     int val = inputString.substring(1,4).toInt();
     analogWrite(ir_leds, val);
    }
@@ -93,7 +92,37 @@ void loop() {
    Serial.print(" ");
    Serial.println(t2);
    sending_time = millis();
- }
-
-  
+ }  
 }
+
+void setPwmFrequency(int pin, int divisor) {
+  byte mode;
+  if(pin == 5 || pin == 6 || pin == 9 || pin == 10) {
+    switch(divisor) {
+      case 1: mode = 0x01; break;
+      case 8: mode = 0x02; break;
+      case 64: mode = 0x03; break;
+      case 256: mode = 0x04; break;
+      case 1024: mode = 0x05; break;
+      default: return;
+    }
+    if(pin == 5 || pin == 6) {
+      TCCR0B = TCCR0B & 0b11111000 | mode;
+    } else {
+      TCCR1B = TCCR1B & 0b11111000 | mode;
+    }
+  } else if(pin == 3 || pin == 11) {
+    switch(divisor) {
+      case 1: mode = 0x01; break;
+      case 8: mode = 0x02; break;
+      case 32: mode = 0x03; break;
+      case 64: mode = 0x04; break;
+      case 128: mode = 0x05; break;
+      case 256: mode = 0x06; break;
+      case 1024: mode = 0x07; break;
+      default: return;
+    }
+    TCCR2B = TCCR2B & 0b11111000 | mode;
+  }
+}
+

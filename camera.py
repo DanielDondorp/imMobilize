@@ -102,8 +102,8 @@ class Camera:
         p = Thread(target=self.start_preview, args = ())
         p.start()
     
-    def video(self, name, duration):
-        p = Thread(target=self.write_video, args = (name, duration,))
+    def video(self, name, duration, preview):
+        p = Thread(target=self.write_video, args = (name, duration,preview,))
         p.start()
      
         
@@ -146,7 +146,7 @@ class Camera:
             cv2.destroyWindow("preview")
 #            cv2.destroyAllWindows()                  
         
-    def write_video(self, name = "out", duration = 60):
+    def write_video(self, name = "out", duration = 60, preview = False):
         
         
         w=int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH ))
@@ -162,31 +162,58 @@ class Camera:
         start_time = time.time()
         end_time = start_time
         self.alive = True
-        fc = 0
-        while (end_time - start_time) < duration and self.alive == True:
-             
-            
-            ret, frame = self.cap.read()
-            
-            if ret == True:
-                                                   
-                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-                if self.do_gamma == True:
-                    frame = self.gamma_correction(frame, self.gamma)
-                out.write(frame)
-                fc +=1
-                cv2.imshow('Recording',frame)
-            
-            end_time = time.time()
-            sys.stdout.write("\r Recording! "+str(np.round((end_time-start_time),2))+"/"+str(duration)+" seconds       ")
-       
+
+        if not preview:
+            fc = 0
+            while (end_time - start_time) < duration and self.alive == True:
+
+
+                ret, frame = self.cap.read()
+
+                if ret == True:
+
+                    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                    if self.do_gamma == True:
+                        frame = self.gamma_correction(frame, self.gamma)
+                    out.write(frame)
+                    fc +=1
+                    # cv2.imshow('Recording',frame)
+
+                end_time = time.time()
+                sys.stdout.write("\r Recording! "+str(np.round((end_time-start_time),2))+"/"+str(duration)+" seconds       ")
+
+            else:
+                sys.stdout.write("\n Recording Complete! Saved as "+name + "Framecount: "+str(fc))
+
+                # cv2.destroyWindow("Recording")
+                out.release()
+                self.alive = False
         else:
-            sys.stdout.write("\n Recording Complete! Saved as "+name + "Framecount: "+str(fc))
-            
-            cv2.destroyWindow("Recording")
-            out.release()
-            self.alive = False
-    
+            fc = 0
+            while (end_time - start_time) < duration and self.alive == True:
+
+                ret, frame = self.cap.read()
+
+                if ret == True:
+
+                    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                    if self.do_gamma == True:
+                        frame = self.gamma_correction(frame, self.gamma)
+                    out.write(frame)
+                    fc += 1
+                    cv2.imshow('Recording',frame)
+
+                end_time = time.time()
+                sys.stdout.write("\r Recording! " + str(np.round((end_time - start_time), 2)) + "/" + str(
+                    duration) + " seconds       ")
+
+            else:
+                sys.stdout.write("\n Recording Complete! Saved as " + name + "Framecount: " + str(fc))
+
+                cv2.destroyWindow("Recording")
+                out.release()
+                self.alive = False
+
     def stop(self):
         self.alive = False
 
