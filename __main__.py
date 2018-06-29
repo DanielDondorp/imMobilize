@@ -38,6 +38,7 @@ class imMobilize(QtWidgets.QWidget):
         self.ui.setupUi(self)
         os.chdir("D:\\")
         self.working_directory_selected = False
+
         """
         ==============================================================
         Connecting the buttons and labels in the serial control group
@@ -567,8 +568,8 @@ class imMobilize(QtWidgets.QWidget):
         self.ui.sliderCameraBrightness.setValue(0)
         self.ui.labelCameraBrighness.setNum(0)
 
-        self.cam.exposure = -5.0
-        t = self.ui.comboboxCameraExposure.findText(str(2 ** -5))
+        self.cam.exposure = -8.0
+        t = self.ui.comboboxCameraExposure.findText(str(2 ** -8))
         self.ui.comboboxCameraExposure.setCurrentIndex(t)
 
         self.cam.gamma = 1
@@ -797,12 +798,20 @@ if __name__ == "__main__":
 
     app = QtGui.QApplication([])
 
+    appIcon = QtGui.QIcon()
+    for x in [16,24,32,48,256]:
+        file = "IM"+str(x)+".png"
+        appIcon.addFile(file, QtCore.QSize(x,x))
+    app.setWindowIcon(appIcon)
+
     projectWindow = QtGui.QMainWindow()
     projectWindow.resize(675, 510)
-    projectWindow.setWindowTitle('Stimuli & Trigger Delivery')
+    projectWindow.setWindowTitle('imMobilize: Stimuli & Trigger Delivery')
+
     immobilize = imMobilize()
     projectWindow.setCentralWidget(immobilize)
     projectWindow.show()
+
 
     if (sys.flags.interactive != 1) or not hasattr(QtCore, 'PYQT_VERSION'):
         QtWidgets.QApplication.instance().exec_()

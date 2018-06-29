@@ -17,7 +17,7 @@ import numpy as np
 class Camera:
     
     def __init__(self, camera: object = 0, framerate: object = 30, shape: object = (7680, 4320), gamma: object = 1, brightness: object = 0,
-                 exposure: object = -5.0) -> object:
+                 exposure: object = -8.0) -> object:
         """
 
         :param camera: Which connected camera to use.
