@@ -22,7 +22,7 @@
   <widget class="QTabWidget" name="tabWidget">
    <property name="geometry">
     <rect>
-     <x>0</x>
+     <x>10</x>
      <y>0</y>
      <width>671</width>
      <height>508</height>
@@ -224,7 +224,10 @@
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gamma calculations will not be performed for framerates higher than 50fps.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="maximum">
-           <number>30</number>
+           <number>500</number>
+          </property>
+          <property name="pageStep">
+           <number>10</number>
           </property>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -502,8 +505,8 @@
       <rect>
        <x>140</x>
        <y>200</y>
-       <width>387</width>
-       <height>205</height>
+       <width>391</width>
+       <height>241</height>
       </rect>
      </property>
      <property name="title">
@@ -659,6 +662,13 @@
         </layout>
        </widget>
       </item>
+      <item row="1" column="0" colspan="2">
+       <widget class="QPushButton" name="buttonSetWorkingDirectory">
+        <property name="text">
+         <string>Set Working Directory</string>
+        </property>
+       </widget>
+      </item>
       <item row="1" column="2" colspan="2">
        <widget class="QPushButton" name="buttonStartExperiment">
         <property name="text">
@@ -666,13 +676,6 @@
         </property>
         <property name="checkable">
          <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0" colspan="2">
-       <widget class="QPushButton" name="buttonSetWorkingDirectory">
-        <property name="text">
-         <string>Set Working Directory</string>
         </property>
        </widget>
       </item>
@@ -687,7 +690,7 @@
        <x>10</x>
        <y>200</y>
        <width>131</width>
-       <height>191</height>
+       <height>231</height>
       </rect>
      </property>
      <property name="title">
@@ -1073,6 +1076,55 @@
         </widget>
        </item>
       </layout>
+     </widget>
+    </widget>
+    <widget class="QGroupBox" name="groupBoxLazyMode">
+     <property name="geometry">
+      <rect>
+       <x>530</x>
+       <y>200</y>
+       <width>91</width>
+       <height>231</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Lazy Mode</string>
+     </property>
+     <widget class="QSpinBox" name="spinBoxLazyMode">
+      <property name="geometry">
+       <rect>
+        <x>11</x>
+        <y>50</y>
+        <width>61</width>
+        <height>22</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelLazyMode">
+      <property name="geometry">
+       <rect>
+        <x>6</x>
+        <y>30</y>
+        <width>81</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Experiments:</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="buttonLazyMode">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>80</y>
+        <width>75</width>
+        <height>141</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>LazyMode</string>
+      </property>
      </widget>
     </widget>
    </widget>
