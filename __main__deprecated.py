@@ -19,18 +19,10 @@ import numpy as np
 from threading import Thread
 from stimulimanager import StimuliManager
 from arduino import Arduino
-#from camera import Camera
 from threadedCam import Camera
 import sys, time, os
 import pandas as pd
 import cv2
-
-### trying to optimise according to Kushals instructions:
-
-try:
-    cv2.setNumThreads(1)
-except:
-    print("OpenCV is naturally single threaded or so I heard...")
 
 
 # from PandasModel import PandasModel
@@ -144,8 +136,6 @@ class imMobilize(QtWidgets.QWidget):
         self.path = os.curdir
         self.experiment_name = self.ui.lineeditExperimentName.text()
         self.experiment_path = os.path.join(self.path, "Exp_" + self.experiment_name)
-        
-        self.ui.buttonLazyMode.clicked.connect(self.start_many)
 
         """
         ======================================================================
@@ -203,7 +193,6 @@ class imMobilize(QtWidgets.QWidget):
             camera_number = int(self.ui.comboBoxConnectedCameras.currentText().split(" ")[1])-1
 
             self.cam = Camera(camera=camera_number)
-           
             if self.cam.cap.isOpened():
                 self.ui.groupBoxCameraControls.setEnabled(True)
                 self.ui.groupBoxVideoControls.setEnabled(True)
@@ -218,11 +207,10 @@ class imMobilize(QtWidgets.QWidget):
                 self.ui.comboboxCameraExposure.setCurrentIndex(t)
                 self.ui.sliderCameraBrightness.setValue(self.cam.brightness)
                 self.ui.labelCameraBrighness.setNum(self.cam.brightness)
-                self.ui.sliderCameraGamma.setValue(self.cam.gamma)
-                self.ui.labelCameraGamma.setNum(self.cam.gamma / 100)
-#                self.ui.sliderCameraGamma.setEnabled(False)
-#                self.cam.signal_recording_finished.connect(self.recording_finished_receiver)
-#                print("Signals have been conneted. Maybe. I dunno")
+                self.ui.sliderCameraGamma.setValue(self.cam.gamma * 10)
+                self.ui.labelCameraGamma.setNum(self.cam.gamma)
+                self.ui.sliderCameraGamma.setEnabled(False)
+                
         else:
             self.toggle_preview(False)
             self.cam.stop()
@@ -439,7 +427,7 @@ class imMobilize(QtWidgets.QWidget):
         duration = self.ui.spinBoxVibrationDuration.value()
         freq = self.ui.spinBoxVibrationFrequency.value()
         start_message = "v"+str(freq).zfill(3)+str(int(duration*1000)).zfill(4)
-        stop_message = "vC"
+        stop_message = ""
         stim_id = self.ui.lineeditVibrationStimName.text()
         self.Stims.add_stimulus(start_time, start_time+duration, start_message, stop_message, stim_id)
         self.set_vibrationstim_name_lineedit()
@@ -521,11 +509,12 @@ class imMobilize(QtWidgets.QWidget):
                 name += "None"
             self.ui.lineeditExperimentName.setText(name)
         else:
+            
             pass
 
     def set_camera_framerate(self, fps):
         self.cam.framerate = fps
-
+        
 #        if self.cam.do_gamma == False:
 #            self.ui.sliderCameraGamma.setVisible(False)
 #            self.ui.labelCameraGamma.setVisible(False)
@@ -538,9 +527,9 @@ class imMobilize(QtWidgets.QWidget):
 
 
     def set_camera_gamma(self, gamma):
-#        gamma = gamma * 10
+        gamma = gamma / 10
         self.cam.gamma = gamma
-        self.ui.labelCameraGamma.setNum(gamma/100)
+        self.ui.labelCameraGamma.setNum(gamma)
 
     def set_camera_exposure(self, exp):
         # If set exposure is longer than framerate allows, then adjust framerate
@@ -571,7 +560,7 @@ class imMobilize(QtWidgets.QWidget):
                 os.chdir(self.path)
                 self.working_directory_selected = True
             else:
-                q = QtWidgets.QMessageBox.question(self, "No path selected", "Do you wish to not select a path? \n Path then defaults to C:\Experiments")
+                q = QtWidgets.QMessageBox.question(self, "No path selected", "Do you wish to not select a path? \n Path then defaults to D:\\")
                 if q == QtWidgets.QMessageBox.Yes:
                     self.path = "D:\\"
                     self.working_directory_selected = True
@@ -620,14 +609,6 @@ class imMobilize(QtWidgets.QWidget):
             self.ui.buttonRecordVideo.setText("Record")
             self.ui.buttonRecordVideo.setStyleSheet("color:Black")
             self.cam.stop()
-#    
-#    @QtCore.pyqtSlot()
-#    def recording_finished_receiver(self):
-#        self.ui.groupBoxCameraControls.setEnabled(True)
-#        self.ui.groupBoxCameraConnection.setEnabled(True)
-#        self.ui.buttonRecordVideo.setText("Record")
-#        self.ui.buttonRecordVideo.setStyleSheet("color:Black")
-#        self.cam.stop()
 
     def wait_for_recording_end(self):
         time.sleep(0.1)
@@ -644,19 +625,6 @@ class imMobilize(QtWidgets.QWidget):
     METHODS TO RUN AN ENTIRE EXPERIMENT
     ==========================================================================================
     """
-    
-        
-    
-    def start_many(self):
-        
-        n_exp = self.ui.spinBoxLazyMode.value()
-        for i in range(n_exp):
-            sys.stdout.write("\n Experiment Sequence. recording "+str(i+1)+" of " + str(n_exp))
-            self.start_experiment(True)
-            while self.experiment_live:
-                time.sleep(1)
-                        
-    
     def start_experiment(self, event):
         if event:
             if not hasattr(self, "cam"):
@@ -665,9 +633,9 @@ class imMobilize(QtWidgets.QWidget):
             elif not self.cam.cap.isOpened():
                 QtWidgets.QMessageBox.warning(self, "Not Connected Warning", "No open connection with Camera")
                 self.ui.buttonStartExperiment.setChecked(False)
-#            elif not self.arduino.connected:
-#                QtWidgets.QMessageBox.warning(self, "Not Connected Warning", "No open connection with Controller")
-#                self.ui.buttonStartExperiment.setChecked(False)
+            elif not self.arduino.connected:
+                QtWidgets.QMessageBox.warning(self, "Not Connected Warning", "No open connection with Controller")
+                self.ui.buttonStartExperiment.setChecked(False)
             else:
                 if not self.working_directory_selected:
                     QtWidgets.QMessageBox.warning(self, "No valid working directory", "Select a directory to save your experiment")
@@ -699,7 +667,6 @@ class imMobilize(QtWidgets.QWidget):
         else:
             self.experiment_live = False
             self.cam.stop()
-            self.Stims.alive = False
             self.ui.checkBoxReadSerialLive.setChecked(False)
             self.ui.buttonStartExperiment.setStyleSheet("color: Black")
             self.ui.buttonStartExperiment.setText("Start Experiment")
@@ -708,17 +675,9 @@ class imMobilize(QtWidgets.QWidget):
             df["date"] = [time.strftime("%Y%m%d")]
             df["time"] = [time.strftime("%H%M%S")]
             df["duration"] = [(self.ui.spinBoxExperimentDurationMinutes.value() * 60) + self.ui.spinBoxExperimentDurationSeconds.value()]
-            
-            if not self.ui.checkboxMetaDataDrugs.isChecked():
-                self.ui.lineeditMetaDataDrugName.clear()
-                self.ui.lineeditMetaDataDrugName.setText("none")
-            if not self.ui.checkboxMetaDataGenetics.isChecked():
-                self.ui.lineeditMetaDataGenetics.clear()
-                self.ui.lineeditMetaDataGenetics.setText("none")
-            
             df["drugs"] = [self.ui.lineeditMetaDataDrugName.text()]
             df["genetics"] = [self.ui.lineeditMetaDataGenetics.text()]
-            df["age"] = [self.ui.spinboxAge.value()]
+            df["age"] = [self.ui.spinboxAge]
             df["framerate"] = [self.cam.framerate]
             df["dechorionated"] = [self.ui.checkboxMetaDataDechorionation.isChecked()]
             df["exposture"] = [float(self.ui.comboboxCameraExposure.currentText())]
