@@ -24,6 +24,7 @@ from threadedCam import Camera
 import sys, time, os
 import pandas as pd
 import cv2
+import socket
 
 ### trying to optimise according to Kushals instructions:
 
@@ -44,6 +45,7 @@ class imMobilize(QtWidgets.QWidget):
 
         self.ui = Ui_Form()
         self.ui.setupUi(self)
+        self.hostname = socket.gethostname()
         os.chdir("D:\\")
         self.working_directory_selected = False
         """
@@ -725,6 +727,8 @@ class imMobilize(QtWidgets.QWidget):
             df["gamma"] = [self.cam.gamma]
             df["brightness"] = [self.cam.brightness]
             df["infrared"] = [self.ui.sliderIRLight.value()]
+            df["camera"] = [self.ui.comboBoxConnectedCameras.currentText()]
+            df["hostname"] = [self.hostname]
 
 
             df.to_csv(os.path.join(self.experiment_path, "metadata.txt"), sep="\t")
