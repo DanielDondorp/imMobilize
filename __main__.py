@@ -136,6 +136,7 @@ class imMobilize(QtWidgets.QWidget):
         self.ui.spinBoxExperimentDurationMinutes.valueChanged.connect(self.set_experiment_view)
         self.ui.spinBoxExperimentDurationSeconds.valueChanged.connect(self.set_experiment_view)
 
+        self.ui.spinboxCrowdsize.setValue(1)
 
         self.ui.checkBoxExperimentAutonaming.clicked.connect(self.set_experiment_autonaming)
         self.set_experiment_autonaming()
@@ -721,9 +722,10 @@ class imMobilize(QtWidgets.QWidget):
             df["drugs"] = [self.ui.lineeditMetaDataDrugName.text()]
             df["genetics"] = [self.ui.lineeditMetaDataGenetics.text()]
             df["age"] = [self.ui.spinboxAge.value()]
+            df["crowdsize"] = [self.ui.spinboxCrowdsize.value()]
             df["framerate"] = [self.cam.framerate]
             df["dechorionated"] = [self.ui.checkboxMetaDataDechorionation.isChecked()]
-            df["exposture"] = [float(self.ui.comboboxCameraExposure.currentText())]
+            df["exposure"] = [float(self.ui.comboboxCameraExposure.currentText())]
             df["gamma"] = [self.cam.gamma]
             df["brightness"] = [self.cam.brightness]
             df["infrared"] = [self.ui.sliderIRLight.value()]
