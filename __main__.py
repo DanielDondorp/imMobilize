@@ -141,7 +141,7 @@ class imMobilize(QtWidgets.QWidget):
         self.ui.spinboxCrowdsize.setValue(1)
         
         self.ui.dateTimeEditHatching.setDateTime(QtCore.QDateTime.fromString(time.strftime("%Y/%m/%d %H:%M:%S"), "yyyy/M/d hh:mm:ss"))
-        self.ui.dateTimeEditHatching.dateTimeChanged.connect(self.check_datetime)
+        self.ui.dateTimeEditHatching.dateTimeChanged.connect(lambda: self.check_datetime(self.ui.dateTimeEditHatching))
 
         self.ui.checkBoxExperimentAutonaming.clicked.connect(self.set_experiment_autonaming)
         self.set_experiment_autonaming()
@@ -774,19 +774,21 @@ class imMobilize(QtWidgets.QWidget):
         return(age.total_seconds(), str(age), int(age.total_seconds()/3600))
         
     def check_datetime(self, widget = "none"):
-        if widget != "none":
-            widget = widget
-        else:
-            widget = self.ui.dateTimeEditHatching
-        
-        total_seconds, readable, hours = self.get_ages(widget)
-        
-        if total_seconds < 0:
-            QtWidgets.QMessageBox.warning(self, "Negative Age Error", "You have set a hatching time in the future.")
-        elif total_seconds > 172800:
-            QtWidgets.QMessageBox.warning(self, "Old Age Error", "Are your animals really {0} hours old?".format(str(int(total_seconds/3600))))
-        
-        
+        try:
+            if widget != "none":
+                widget = widget
+            else:
+                widget = self.ui.dateTimeEditHatching
+            
+            total_seconds, readable, hours = self.get_ages(widget)
+            
+            if total_seconds < 0:
+                QtWidgets.QMessageBox.warning(self, "Negative Age Warning", "You are trying to set a hatching time in the future.")
+            elif total_seconds >= (50 * 3600):
+                QtWidgets.QMessageBox.warning(self, "Old Age Warning", "Are your animals really {0} hours old?".format(str(int(total_seconds/3600))))
+
+        except Exception as e:
+            print(str(e))
 
     # def start_experiment(self):
     #
