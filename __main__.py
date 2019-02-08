@@ -14,6 +14,7 @@ pyqtgraph.setConfigOption("foreground", "k")
 
 from pyqtgraph import PlotDataItem, LinearRegionItem, mkPen
 
+
 # from functools import partial
 import numpy as np
 from threading import Thread
@@ -21,6 +22,7 @@ from stimulimanager import StimuliManager
 from arduino import Arduino
 #from camera import Camera
 from threadedCam import Camera
+from datetime import datetime
 import sys, time, os
 import pandas as pd
 import cv2
@@ -137,6 +139,9 @@ class imMobilize(QtWidgets.QWidget):
         self.ui.spinBoxExperimentDurationSeconds.valueChanged.connect(self.set_experiment_view)
 
         self.ui.spinboxCrowdsize.setValue(1)
+        
+        self.ui.dateTimeEditHatching.setDateTime(QtCore.QDateTime.fromString(time.strftime("%Y/%m/%d %H:%M:%S"), "yyyy/M/d hh:mm:ss"))
+        self.ui.dateTimeEditHatching.dateTimeChanged.connect(self.check_datetime)
 
         self.ui.checkBoxExperimentAutonaming.clicked.connect(self.set_experiment_autonaming)
         self.set_experiment_autonaming()
@@ -721,7 +726,12 @@ class imMobilize(QtWidgets.QWidget):
             
             df["drugs"] = [self.ui.lineeditMetaDataDrugName.text()]
             df["genetics"] = [self.ui.lineeditMetaDataGenetics.text()]
-            df["age"] = [self.ui.spinboxAge.value()]
+            seconds, readable, hph = self.get_ages()
+            df["age"] = [hph] #legacy
+            df["exact_age_seconds"] = [seconds]
+            df["exact_age_readable"] = [readable]
+            df["hatching_time"] = self.ui.dateTimeEditHatching.dateTime().toString("yyyyMMdd hh:mm:ss")
+            
             df["crowdsize"] = [self.ui.spinboxCrowdsize.value()]
             df["framerate"] = [self.cam.framerate]
             df["dechorionated"] = [self.ui.checkboxMetaDataDechorionation.isChecked()]
@@ -751,6 +761,32 @@ class imMobilize(QtWidgets.QWidget):
             if self.experiment_live:
                 self.start_experiment(False)
                 self.ui.buttonStartExperiment.setChecked(False)
+                
+    def get_ages(self, widget = "none"):
+        if widget != "none":
+            widget = widget
+        else:
+            widget = self.ui.dateTimeEditHatching
+        hatching_time_qt = widget.dateTime()
+        hatching_time = datetime.strptime(hatching_time_qt.toString("yyyyMMdd hh:mm:ss"), "%Y%m%d %H:%M:%S")
+        
+        age = datetime.now() - hatching_time
+        return(age.total_seconds(), str(age), int(age.total_seconds()/3600))
+        
+    def check_datetime(self, widget = "none"):
+        if widget != "none":
+            widget = widget
+        else:
+            widget = self.ui.dateTimeEditHatching
+        
+        total_seconds, readable, hours = self.get_ages(widget)
+        
+        if total_seconds < 0:
+            QtWidgets.QMessageBox.warning(self, "Negative Age Error", "You have set a hatching time in the future.")
+        elif total_seconds > 172800:
+            QtWidgets.QMessageBox.warning(self, "Old Age Error", "Are your animals really {0} hours old?".format(str(int(total_seconds/3600))))
+        
+        
 
     # def start_experiment(self):
     #
