@@ -5,7 +5,7 @@ Created on Mon Feb  5 13:20:50 2018
 @author: ddo003
 """
 
-from form import *
+from Interface.form import *
 from pyqtgraph.Qt import QtCore, QtGui, QtWidgets
 import pyqtgraph
 
