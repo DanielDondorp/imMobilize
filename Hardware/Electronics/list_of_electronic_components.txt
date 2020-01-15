@@ -1,0 +1,15 @@
+NAME    PART
+R1  10 kOhm
+R1  10 kOhm
+R3  10 kOhm
+R4  220 Ohm
+R5  330 Ohm
+R6  4.7 kOhm
+Q1  FQP30NO6
+Q2  FQP30NO6
+Q3  FQP30NO6
+L1  5mm Blue LED
+C1  1000 uF 
+TSR1    TSR1-2450
+X1-6    Molex connectors
+X8  2pin screw terminal
