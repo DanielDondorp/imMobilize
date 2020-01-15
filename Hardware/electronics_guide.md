@@ -1,4 +1,3 @@
-
 # imMobilize Electronics
 
 For accurate timing of a range of stimuli, and logging of temperature data during an experiment, we use a microcontroller on a custom circuit board. The circuit schematic can be seen below. 
