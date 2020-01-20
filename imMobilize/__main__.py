@@ -19,7 +19,7 @@ from pyqtgraph import PlotDataItem, LinearRegionItem, mkPen
 import numpy as np
 from threading import Thread
 from StimuliManager.StimuliManager import StimuliManager
-from MicroControllerCode import Arduino
+from MicroControllerCode.Arduino import Arduino
 #from camera import Camera
 from CameraModule.ThreadedCam import Camera
 from datetime import datetime
@@ -48,7 +48,10 @@ class imMobilize(QtWidgets.QWidget):
         self.ui = Ui_Form()
         self.ui.setupUi(self)
         self.hostname = socket.gethostname()
-        os.chdir("D:\\")
+        try:
+            os.chdir("D:\\")
+        except:
+            os.chdir(f"/home/{os.getlogin()}")
         self.working_directory_selected = False
         """
         ==============================================================
