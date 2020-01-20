@@ -813,7 +813,7 @@ if __name__ == "__main__":
 
     projectWindow = QtGui.QMainWindow()
     projectWindow.resize(675, 510)
-    projectWindow.setWindowTitle('Stimuli & Trigger Delivery')
+    projectWindow.setWindowTitle('imMobilize')
     immobilize = imMobilize()
     projectWindow.setCentralWidget(immobilize)
     projectWindow.show()
